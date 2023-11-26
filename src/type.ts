@@ -24,33 +24,33 @@ export interface Env {
 
 interface TelegramChat {
 	id: number      // Chat ID
-	// 添加更多的聊天相关字段
+	// 添加更多的聊天相关字段 | Add more chat related fields
 }
 
 interface TelegramPhoto {
-	file_id: string // 可用于获取文件内容
-	file_unique_id: string // 文件的唯一标识符
-	width: number // 图片宽度
-	height: number // 图片高度
-	file_size?: number // 文件大小（可选）
+	file_id: string // 可用于获取文件内容 | Can be used to get file content
+	file_unique_id: string // 文件的唯一标识符 | Unique identifier for this file
+	width: number // 图片宽度 | Image width
+	height: number // 图片高度 | Image height
+	file_size?: number // 文件大小（可选） | File size (optional)
 }
 
 interface TelegramMessage {
 	message_id: number // Message ID
 	chat: TelegramChat // Chat object
 	text?: string      // Received message text, optional
-	reply_to_message?: TelegramMessage  // 添加这个字段来获取回复的消息
+	reply_to_message?: TelegramMessage  // 添加这个字段来获取回复的消息 | Add this field to get the replied message
 	from: {
-		username: string // 发送者的用户名
-		id: string // 发送者的ID
+		username: string // 发送者的用户名 | Sender's username
+		id: string // 发送者的ID | Sender's ID
 	},
 	caption?: string
-	photo?: TelegramPhoto[] // TelegramPhoto需要根据API定义
-	// 添加更多的消息相关字段
+	photo?: TelegramPhoto[] // TelegramPhoto需要根据API定义 | TelegramPhoto needs to be defined according to the API
+	// 添加更多的消息相关字段 | Add more message related fields
 }
 
 export interface TelegramUpdate {
 	update_id: number      // Update ID from Telegram
 	message?: TelegramMessage // Message object, optional
-	// 添加更多的更新相关字段
+	// 添加更多的更新相关字段| Add more update related fields
 }

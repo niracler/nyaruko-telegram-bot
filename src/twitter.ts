@@ -25,7 +25,7 @@ export async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Pr
         },
     }
 
-    // 初始化媒体上传以获取media_id
+    // 初始化媒体上传以获取media_id | Initialize media upload to get media_id
     const response = await fetch(requestData.url, {
         method: 'POST',
         headers: {

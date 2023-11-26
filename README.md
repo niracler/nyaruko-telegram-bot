@@ -12,6 +12,11 @@ Currently, Nyaruko has the following stunning features:
 
 With the `/sync_twitter` command, Nyaruko can synchronize messages from Telegram to Twitter. Let your thoughts take flight and soar into another social media realm. 🕊️ However, Nyaruko is still growing and currently does not support hyperlinks or handle Telegram's `media_group`. Cleverly caching history in Cloudflare is needed, and it is believed that Nyaruko will soon learn this new skill! 🎓
 
+<div align=center>
+  <img width="400" src="doc/image2.png">
+  <img width="400" src="doc/image1.png">
+</div>
+
 ### More features coming soon
 
 The capabilities of Nyaruko are continuously evolving, and more exciting features will be launched in the future.

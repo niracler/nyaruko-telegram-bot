@@ -1,13 +1,13 @@
 name = "nyaruko-telegram-bot"
 main = "src/index.ts"
 compatibility_date = "2023-11-21"
+compatibility_flags = [ "nodejs_compat" ]
 
 # Variable bindings. These are arbitrary, plaintext strings (similar to environment variables)
 # Note: Use secrets to store sensitive data.
 # Docs: https://developers.cloudflare.com/workers/platform/environment-variables
 [vars]
-TELEGRAM_BOT_WEBHOOK = "/endpoint"
-
+ALLOW_USER_IDS = ['niracler', 'niracler_channel', '1087968824']
 # MY_VARIABLE = "production_value"
 
 # Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.

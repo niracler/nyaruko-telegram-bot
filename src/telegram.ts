@@ -18,7 +18,7 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
     } else if (update.message.text.startsWith('/sync_twitter')) {
         replyText = await processSyncTwitterCommand(update, env)
     } else {
-        replyText = `Echo: ${update.message.text}`
+        return
     }
 
     // Send a reply message to Telegram

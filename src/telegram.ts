@@ -17,8 +17,12 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
         return
     } else if (update.message.text.startsWith('/sync_twitter')) {
         replyText = await processSyncTwitterCommand(update, env)
-    } else {
-        return
+    } else if (update.message.text.startsWith('/getchatid')) {
+        replyText = await processGetGroupIdCommand(update, env)
+    } else if (update.message.text.startsWith('/getuserid')) {
+        replyText = await processGetUserIdCommand(update, env)
+    } else if (update.message.text.startsWith('/ping')) {
+        replyText = await processPingCommand(update, env)
     }
 
     // Send a reply message to Telegram
@@ -46,6 +50,21 @@ async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Prom
     }
 }
 
+// Process the '/getgroupid' command
+async function processGetGroupIdCommand(update: TelegramUpdate, env: Env): Promise<string> {
+    return `Your chat ID is ${update.message?.chat.id}`
+}
+
+// Process the '/getuserid' command
+async function processGetUserIdCommand(update: TelegramUpdate, env: Env): Promise<string> {
+    return `Your user ID is ${update.message?.from?.id}`
+}
+
+// Process the '/ping' command
+async function processPingCommand(update: TelegramUpdate, env: Env): Promise<string> {
+    // Show more information about this chat
+    return JSON.stringify(update.message?.chat, null, 2)
+}
 
 // Fetch the file URL from Telegram using the file_id
 async function getTelegramFileUrl(fileId: string, botSecret: string): Promise<string> {

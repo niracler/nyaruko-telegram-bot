@@ -15,6 +15,13 @@
   <img width="400" src="doc/image1.png">
 </div>
 
+### 所有功能列表
+
+- `/sync_twitter` - 将 Telegram 信息同步到 Twitter 上。
+- `/ping` - 测试机器人是否在线。
+- `/getchatid` - 获取当前对话的 ID。
+- `/getuserid` - 获取当前用户的 ID。
+
 ### 更多功能敬请期待
 
 Nyaruko 的能力正在不断进化中，未来将会有更多激动人心的功能陆续上线。

@@ -17,6 +17,13 @@ With the `/sync_twitter` command, Nyaruko can synchronize messages from Telegram
   <img width="400" src="doc/image1.png">
 </div>
 
+### All Features list
+
+- `/sync_twitter` - Sync msg to Twitter.
+- `/ping` - Test if the bot is online.
+- `/getchatid` - Get the ID of the current chat.
+- `/getuserid` - Get the ID of the current user.
+
 ### More features coming soon
 
 The capabilities of Nyaruko are continuously evolving, and more exciting features will be launched in the future.

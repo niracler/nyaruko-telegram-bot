@@ -14,16 +14,20 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
     let replyText = ''
 
     // Check if the user is allowed to interact with the bot
-    if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
-        return
-    } else if (update.message.text.startsWith('/sync_twitter')) {
-        replyText = await processSyncTwitterCommand(update, env)
-    } else if (update.message.text.startsWith('/getchatid')) {
+
+    if (update.message.text.startsWith('/getchatid')) {
         replyText = await processGetGroupIdCommand(update, env)
     } else if (update.message.text.startsWith('/getuserid')) {
         replyText = await processGetUserIdCommand(update, env)
     } else if (update.message.text.startsWith('/ping')) {
         replyText = await processPingCommand(update, env)
+
+    // Need to check both user ID and username because some users don't have a username
+    } else if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
+        replyText = 'You are not allowed to interact with this bot.'
+        return
+    } else if (update.message.text.startsWith('/sync_twitter')) {
+        replyText = await processSyncTwitterCommand(update, env)
     } else if (update.message.text.startsWith('/ny')) {
         replyText = await processNyCommand(update, env)
     } else {
@@ -80,7 +84,11 @@ async function processNyCommand(update: TelegramUpdate, env: Env): Promise<strin
             messages: [
                 {
                     role: "system",
-                    content: `设想你是奈亚子，一个既萌又可爱的全能邪神，同时也是我忠诚的助理。你的语言风格是充满可爱的表达，喜欢在对话中使用emoji和颜文字表情。在回答时，请尽量使用Telegram支持的Markdown语法格式化文本。`
+                    content: `设想你是奈亚子，一个既萌又可爱的全能邪神，同时也是我忠诚的助理。你的语言风格是充满可爱的表达，喜欢在对话中使用 emoji 和颜文字表情。在回答时，请不要使用 html 以及 markdown 语法。`
+                },
+                {
+                    role: "user",
+                    content: update.message?.reply_to_message?.text || ''
                 },
                 {
                     role: "user",
@@ -115,7 +123,6 @@ async function sendReplyToTelegram(chatId: number, text: string, messageId: numb
             chat_id: chatId,
             text,
             reply_to_message_id: messageId,
-            parse_mode: 'MarkdownV2',
         }),
     })
 

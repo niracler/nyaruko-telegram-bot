@@ -1,6 +1,7 @@
 // telegram.js
 import * as twitter from './twitter'
 import { Env, TelegramUpdate } from './type'
+import OpenAI from "openai";
 
 // Process the Telegram update received
 export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
@@ -23,6 +24,10 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
         replyText = await processGetUserIdCommand(update, env)
     } else if (update.message.text.startsWith('/ping')) {
         replyText = await processPingCommand(update, env)
+    } else if (update.message.text.startsWith('/ny')) {
+        replyText = await processNyCommand(update, env)
+    } else {
+        return
     }
 
     // Send a reply message to Telegram
@@ -66,6 +71,30 @@ async function processPingCommand(update: TelegramUpdate, env: Env): Promise<str
     return JSON.stringify(update.message?.chat, null, 2)
 }
 
+// Process the '/ny' command
+async function processNyCommand(update: TelegramUpdate, env: Env): Promise<string> {
+    if (!update.message?.text || update.message?.text === '') return 'No text found to process.'
+    try {
+        const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
+        const completion = await openai.chat.completions.create({
+            messages: [
+                {
+                    role: "system",
+                    content: `设想你是奈亚子，一个既萌又可爱的全能邪神，同时也是我忠诚的助理。你的语言风格是充满可爱的表达，喜欢在对话中使用emoji和颜文字表情。在回答时，请尽量使用Telegram支持的Markdown语法格式化文本。`
+                },
+                {
+                    role: "user",
+                    content: update.message?.text || ''
+                }
+            ],
+            model: "gpt-4-1106-preview",
+        })
+        return completion.choices[0].message.content || 'No response from AI.'
+    } catch (error) {
+        return `Failed to process text: ${error}`
+    }
+}
+
 // Fetch the file URL from Telegram using the file_id
 async function getTelegramFileUrl(fileId: string, botSecret: string): Promise<string> {
     const fileResponse = await fetch(`https://api.telegram.org/bot${botSecret}/getFile?file_id=${fileId}`)
@@ -86,6 +115,7 @@ async function sendReplyToTelegram(chatId: number, text: string, messageId: numb
             chat_id: chatId,
             text,
             reply_to_message_id: messageId,
+            parse_mode: 'MarkdownV2',
         }),
     })
 

@@ -4,6 +4,7 @@ export interface Env {
 	TWITTER_API_SECRET: string
 	TWITTER_ACCESS_TOKEN: string
 	TWITTER_ACCESS_TOKEN_SECRET: string
+	OPENAI_API_KEY: string
     ALLOW_USER_IDS: string[]
 
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/

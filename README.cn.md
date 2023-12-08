@@ -21,6 +21,7 @@
 - `/ping` - 测试机器人是否在线。
 - `/getchatid` - 获取当前对话的 ID。
 - `/getuserid` - 获取当前用户的 ID。
+- `/ny` - 与 Nyaruko 机器人进行互动。
 
 ### 更多功能敬请期待
 
@@ -44,6 +45,7 @@ Nyaruko 需要以下环境变量的支持来发挥其作用：
 - `TWITTER_API_SECRET`：您的 Twitter API 密钥密文。
 - `TWITTER_ACCESS_TOKEN`：Twitter 的访问令牌。
 - `TWITTER_ACCESS_TOKEN_SECRET`：Twitter 的访问令牌密文。
+- `OPENAI_API_KEY`：OpenAI 的 API 密钥。
 
 [点击这里](https://developer.twitter.com/en/portal/dashboard) 来获取 Twitter 相关的 token。
 

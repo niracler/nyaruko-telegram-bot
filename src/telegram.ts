@@ -22,6 +22,10 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
     } else if (update.message.text.startsWith('/ping')) {
         replyText = await processPingCommand(update, env)
 
+    // was been @ by someone
+    } else if (update.message.text.includes(`@${env.TELEGRAM_BOT_USERNAME}`)) {
+        replyText = await processNyCommand(update, env)
+
     // Need to check both user ID and username because some users don't have a username
     } else if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
         replyText = 'You are not allowed to interact with this bot.'
@@ -30,6 +34,7 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
         replyText = await processSyncTwitterCommand(update, env)
     } else if (update.message.text.startsWith('/ny')) {
         replyText = await processNyCommand(update, env)
+
     } else {
         return
     }
@@ -88,7 +93,7 @@ async function processNyCommand(update: TelegramUpdate, env: Env): Promise<strin
                 },
                 {
                     role: "user",
-                    content: update.message?.reply_to_message?.text || ''
+                    content: update.message?.reply_to_message?.text || update.message?.reply_to_message?.caption || ''
                 },
                 {
                     role: "user",
@@ -97,7 +102,7 @@ async function processNyCommand(update: TelegramUpdate, env: Env): Promise<strin
             ],
             model: "gpt-4-1106-preview",
         })
-        return completion.choices[0].message.content || 'No response from AI.'
+        return `${completion.choices[0].message.content} \n -- by gpt-4-1106-preview` || 'No response from AI.'
     } catch (error) {
         return `Failed to process text: ${error}`
     }

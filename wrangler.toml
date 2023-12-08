@@ -8,6 +8,7 @@ compatibility_flags = [ "nodejs_compat" ]
 # Docs: https://developers.cloudflare.com/workers/platform/environment-variables
 [vars]
 ALLOW_USER_IDS = ['niracler', 'niracler_channel', '1087968824']
+TELEGRAM_BOT_USERNAME = 'nyaruko_aibot'
 # MY_VARIABLE = "production_value"
 
 # Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.

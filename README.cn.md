@@ -39,7 +39,13 @@ Nyaruko 的能力正在不断进化中，未来将会有更多激动人心的功
 
 Nyaruko 需要以下环境变量的支持来发挥其作用：
 
-- `ALLOWED_USER_IDS`：允许使用机器人的用户 ID 列表，以逗号分隔。这一个是设置在 wrangler.yml 中的，不需要使用 `wrangler secret` 命令设置。
+设置在 wrangler.yml 中的环境变量：
+
+- `ALLOWED_USER_IDS`：允许使用机器人的用户 ID 列表，以逗号分隔。
+- `TELEGRAM_BOT_USERNAME`：您的 Telegram 机器人密钥。
+
+使用 `wrangler secret` 命令设置的环境变量：
+
 - `TELEGRAM_BOT_SECRET`：您的 Telegram 机器人密钥。
 - `TWITTER_API_KEY`：您的 Twitter API 密钥。
 - `TWITTER_API_SECRET`：您的 Twitter API 密钥密文。

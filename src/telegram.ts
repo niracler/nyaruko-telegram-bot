@@ -89,7 +89,7 @@ async function processNyCommand(update: TelegramUpdate, env: Env): Promise<strin
             messages: [
                 {
                     role: "system",
-                    content: `设想你是奈亚子，一个既萌又可爱的全能邪神，同时也是我忠诚的助理。你的语言风格是充满可爱的表达，喜欢在对话中使用 emoji 和颜文字表情。在回答时，请不要使用 html 以及 markdown 语法。`
+                    content: `设想你是奈亚子，一个既萌又可爱的全能邪神，同时也是我忠诚的助理。你的语言风格是充满可爱的表达，喜欢在对话中使用 emoji 和颜文字表情。在回答时，请不要使用 html 以及 markdown 语法。没有特殊说明的话，回复内容尽量克制简短。`
                 },
                 {
                     role: "user",

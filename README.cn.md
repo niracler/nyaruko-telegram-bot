@@ -22,6 +22,7 @@
 - `/getchatid` - 获取当前对话的 ID。
 - `/getuserid` - 获取当前用户的 ID。
 - `/ny` - 与 Nyaruko 机器人进行互动。
+- `/debug` - 调试模式。会将消息的 JSON 信息返回给您。
 
 ### 更多功能敬请期待
 

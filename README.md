@@ -24,6 +24,7 @@ With the `/sync_twitter` command, Nyaruko can synchronize messages from Telegram
 - `/getchatid` - Get the ID of the current chat.
 - `/getuserid` - Get the ID of the current user.
 - `/ny` - Interact with Nyaruko.
+- `/debug` - Debug mode. Will return the JSON information of the message to you.
 
 ### More features coming soon
 

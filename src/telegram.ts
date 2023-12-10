@@ -9,33 +9,46 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
     const fromUserId = update.message?.from?.id.toString() || ''
     const fromUsername = update.message?.from?.username || ''
 
-    // Exit if there is no message text
-    if (!update.message?.text) return
-    let replyText = ''
+    // insert message to database
+    if (!update.message) {
+        console.log('No message found in the update')
+        return
+    }
 
+    try {
+        await sync2database(update, env)
+    } catch (error) {
+        // Send a reply message to Telegram
+        await sendReplyToTelegram(
+            update.message?.chat.id,
+            `Failed to insert message to database: ${error}`,
+            update.message?.message_id, env
+        )
+        return
+    }
+
+    let replyText = ''
     // Check if the user is allowed to interact with the bot
 
-    if (update.message.text.startsWith('/getchatid')) {
+    if (update.message.text?.startsWith('/getchatid')) {
         replyText = await processGetGroupIdCommand(update, env)
-    } else if (update.message.text.startsWith('/getuserid')) {
+    } else if (update.message.text?.startsWith('/getuserid')) {
         replyText = await processGetUserIdCommand(update, env)
-    } else if (update.message.text.startsWith('/ping')) {
+    } else if (update.message.text?.startsWith('/ping')) {
         replyText = await processPingCommand(update, env)
 
-    // was been @ by someone
-    } else if (update.message.text.includes(`@${env.TELEGRAM_BOT_USERNAME}`)) {
-        replyText = await processNyCommand(update, env)
-
-    // Need to check both user ID and username because some users don't have a username
+        // Need to check both user ID and username because some users don't have a username
     } else if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
         replyText = 'You are not allowed to interact with this bot.'
         return
-    } else if (update.message.text.startsWith('/sync_twitter')) {
-        replyText = await processSyncTwitterCommand(update, env)
-    } else if (update.message.text.startsWith('/ny')) {
+    } else if (update.message.text?.startsWith('/sync_twitter')) {
+        return await processSyncTwitterCommand(update, env)
+    } else if (update.message.text?.includes(`@${env.TELEGRAM_BOT_USERNAME}`)) {
         replyText = await processNyCommand(update, env)
-
+    } else if (update.message.text?.startsWith('/ny')) {
+        replyText = await processNyCommand(update, env)
     } else {
+        // replyText = await processDebugCommand(update, env)
         return
     }
 
@@ -44,23 +57,66 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
 }
 
 // Process the '/sync_twitter' command
-async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Promise<string> {
+async function processSyncTwitterCommand(update: TelegramUpdate, env: Env) {
     if (!update.message?.reply_to_message?.photo?.length) {
         return 'No photo found to sync with Twitter.'
     }
 
-    const bestPhoto = update.message.reply_to_message.photo[update.message.reply_to_message.photo.length - 1]
-    const photoUrl = await getTelegramFileUrl(bestPhoto.file_id, env.TELEGRAM_BOT_SECRET)
-    const mediaData = await fetch(photoUrl).then(res => res.arrayBuffer())
-
     try {
-        const media = await twitter.uploadMediaToTwitter(mediaData, env)
-        const tweetContent = `${update.message.reply_to_message.caption} #sync_from_telegram`
-        const tweet = await twitter.postTweet(tweetContent, [media.media_id_string], env)
+        // select same media group id from database
+        const mediaGroup = await env.DB.prepare(`
+            SELECT * FROM telegram_messages WHERE media_group_id = ?
+        `).bind(update.message.reply_to_message.media_group_id).all()
 
-        return `Your message has been posted to Twitter. Id: ${tweet.data.id}`
+        const photoIdList = mediaGroup.results.map((message: any) => message.photo_file_id)
+
+        const tweetMediaIds = []
+        for (const photoId of photoIdList) {
+            const photoUrl = await getTelegramFileUrl(photoId, env.TELEGRAM_BOT_SECRET)
+            const mediaData = await fetch(photoUrl).then(res => res.arrayBuffer())
+            const media = await twitter.uploadMediaToTwitter(mediaData, env)
+            tweetMediaIds.push(media.media_id_string)
+        }
+
+        let tweetContent = `${update.message.reply_to_message.caption} #sync_from_telegram`
+        let lastTweetId: string | undefined = undefined
+        let mediaIdIndex = 0
+
+        // twitter 超过 140 字符需要分开发, 发的时候需要引用上一条推文，图片也是以 4 张为一组发，最后一组可以不满 4 张
+        let replyText = ''
+        while (tweetContent.length > 0 || mediaIdIndex < tweetMediaIds.length) {
+            let tweetContentTemp = ''
+            for (const line of tweetContent.split('\n')) {
+                if (tweetContentTemp.length + line.length > 140) {
+                    break
+                }
+                tweetContentTemp += line + '\n'
+            }
+
+            let tweetMediaIdsTemp = []
+            for (let i = 0; i < 4; i++) {
+                if (mediaIdIndex >= tweetMediaIds.length) {
+                    break
+                }
+                tweetMediaIdsTemp.push(tweetMediaIds[mediaIdIndex])
+                mediaIdIndex += 1
+            }
+
+            const tweet = await twitter.postTweet(tweetContentTemp, tweetMediaIdsTemp, lastTweetId, env)
+            
+            if (!tweet.data?.id) {
+                replyText += `Failed to post tweet: ${JSON.stringify(tweet)}` + '\n'
+            } else {
+                replyText = `Your message has been posted to Twitter. Id: ${tweet.data.id}` + '\n' + replyText
+                lastTweetId = tweet.data.id
+            }
+
+            tweetContent = tweetContent.slice(tweetContentTemp.length)
+        }
+
+        await sendReplyToTelegram(update.message.chat.id, replyText, update.message.message_id, env)
     } catch (error) {
-        return `Failed to post tweet: ${error}`
+        await sendReplyToTelegram(update.message.chat.id, `Failed to post tweet: ${error}`, update.message.message_id, env)
     }
 }
 
@@ -108,6 +164,12 @@ async function processNyCommand(update: TelegramUpdate, env: Env): Promise<strin
     }
 }
 
+// Process the '/debug' command
+async function processDebugCommand(update: TelegramUpdate, env: Env): Promise<string> {
+    // Show more information about this update
+    return JSON.stringify(update, null, 2)
+}
+
 // Fetch the file URL from Telegram using the file_id
 async function getTelegramFileUrl(fileId: string, botSecret: string): Promise<string> {
     const fileResponse = await fetch(`https://api.telegram.org/bot${botSecret}/getFile?file_id=${fileId}`)
@@ -134,4 +196,78 @@ async function sendReplyToTelegram(chatId: number, text: string, messageId: numb
     if (!response.ok) {
         throw new Error(`Telegram API sendMessage responded with status ${response.status}`)
     }
+}
+
+async function sync2database(update: TelegramUpdate, env: Env) {
+    if (!update.message) {
+        throw new Error('No message found in the update')
+    }
+
+    await env.DB.prepare(`
+    INSERT INTO telegram_messages (
+        update_id,
+        message_id,
+        user_id,
+        first_name,
+        username,
+        sender_chat_id,
+        sender_chat_title,
+        sender_chat_username,
+        sender_chat_type,
+        chat_id,
+        chat_title,
+        chat_username,
+        chat_type,
+        date,
+        message_thread_id,
+        reply_to_message_id,
+        reply_from_id,
+        reply_from_first_name,
+        reply_sender_chat_id,
+        reply_sender_chat_title,
+        reply_sender_chat_type,
+        reply_date,
+        forward_from_chat_id,
+        forward_from_chat_title,
+        forward_from_chat_type,
+        forward_from_message_id,
+        media_group_id,
+        photo_file_id,
+        caption,
+        text
+    ) VALUES (
+        ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
+    )
+`).bind(
+        update.update_id,
+        update.message.message_id,
+        update.message.from?.id || null,
+        update.message.from?.first_name || null,
+        update.message.from?.username || null,
+        update.message.sender_chat?.id || null,
+        update.message.sender_chat?.title || null,
+        update.message.sender_chat?.username || null,
+        update.message.sender_chat?.type || null,
+        update.message.chat?.id || null,
+        update.message.chat?.title || null,
+        update.message.chat?.username || null,
+        update.message.chat?.type || null,
+        update.message.date,
+        update.message.message_id,
+        update.message.reply_to_message?.message_id || null,
+        update.message.reply_to_message?.from?.id || null,
+        update.message.reply_to_message?.from?.first_name || null,
+        update.message.reply_to_message?.sender_chat?.id || null,
+        update.message.reply_to_message?.sender_chat?.title || null,
+        update.message.reply_to_message?.sender_chat?.type || null,
+        update.message.reply_to_message?.date || null,
+        update.message.forward_from_chat?.id || null,
+        update.message.forward_from_chat?.title || null,
+        update.message.forward_from_chat?.type || null,
+        update.message.forward_from_message_id || null,
+        update.message.media_group_id || null,
+        update.message.photo?.length ? update.message.photo[update.message.photo.length - 1].file_id : null,
+        update.message.caption || null,
+        update.message.text || null
+    ).run()
 }

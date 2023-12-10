@@ -38,7 +38,7 @@ export async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Pr
     return await response.json()
 }
 
-export async function postTweet(text: string, mediaList: string[], env: Env): Promise<any> {
+export async function postTweet(text: string, mediaList: string[], replyId: string | undefined, env: Env): Promise<any> {
     const oauth = new OAuth({
         consumer: { key: env.TWITTER_API_KEY, secret: env.TWITTER_API_SECRET },
         signature_method: 'HMAC-SHA1',
@@ -57,13 +57,25 @@ export async function postTweet(text: string, mediaList: string[], env: Env): Pr
         method: 'POST',
     }
 
+    let msg:any = { 
+        text, 
+    }
+
+    if (replyId) {
+        msg.reply = { in_reply_to_tweet_id: replyId }
+    }
+
+    if (mediaList.length > 0) {
+        msg.media = { media_ids: mediaList }
+    }
+
     const response = await fetch(requestData.url, {
         method: 'POST',
         headers: {
             ...oauth.toHeader(oauth.authorize(requestData, oauthToken)),
             'content-type': "application/json",
         },
-        body: JSON.stringify({ text, media: { media_ids: mediaList } }),
+        body: JSON.stringify(msg),
     })
 
     return await response.json()

@@ -14,8 +14,12 @@ import { Env, TelegramUpdate } from './type'
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
 		if (request.method === 'POST') {
-			const update = await request.json() as TelegramUpdate
-			await handleTelegramUpdate(update, env)
+			try {
+				const update = await request.json() as TelegramUpdate
+				await handleTelegramUpdate(update, env)
+			} catch (e) {
+				console.log(e)
+			}
 			return new Response('Update processed')
 		}
 		return new Response('Expecting POST request')

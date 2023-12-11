@@ -10,10 +10,20 @@
 
 通过 `/sync_twitter` 命令，Nyaruko 可以将 Telegram 中的信息同步到 Twitter 上。让你的思绪像翅膀一样，飞跃到另一个社交圈。🕊️ 不过呢，Nyaruko 还在成长中，当前还不支持超链接以及处理 Telegram 的 `media_group`。这需要在 Cloudflare 中巧妙地缓存历史，相信不久之后，Nyaruko 将学会这项新技能！🎓
 
+详情请看 [这里](https://github.com/niracler/nyaruko-telegram-bot/pull/2), 有更完整的例子。
+
 <div align=center>
   <img width="400" src="doc/image2.png">
   <img width="400" src="doc/image1.png">
 </div>
+
+### 所有功能列表
+
+- `/sync_twitter` - 将 Telegram 信息同步到 Twitter 上。
+- `/ping` - 测试机器人是否在线。
+- `/getchatid` - 获取当前对话的 ID。
+- `/getuserid` - 获取当前用户的 ID。
+- `/ny` - 与 Nyaruko 机器人进行互动。
 
 ### 更多功能敬请期待
 
@@ -31,12 +41,19 @@ Nyaruko 的能力正在不断进化中，未来将会有更多激动人心的功
 
 Nyaruko 需要以下环境变量的支持来发挥其作用：
 
-- `ALLOWED_USER_IDS`：允许使用机器人的用户 ID 列表，以逗号分隔。这一个是设置在 wrangler.yml 中的，不需要使用 `wrangler secret` 命令设置。
+设置在 wrangler.yml 中的环境变量：
+
+- `ALLOWED_USER_IDS`：允许使用机器人的用户 ID 列表，以逗号分隔。
+- `TELEGRAM_BOT_USERNAME`：您的 Telegram 机器人密钥。
+
+使用 `wrangler secret` 命令设置的环境变量：
+
 - `TELEGRAM_BOT_SECRET`：您的 Telegram 机器人密钥。
 - `TWITTER_API_KEY`：您的 Twitter API 密钥。
 - `TWITTER_API_SECRET`：您的 Twitter API 密钥密文。
 - `TWITTER_ACCESS_TOKEN`：Twitter 的访问令牌。
 - `TWITTER_ACCESS_TOKEN_SECRET`：Twitter 的访问令牌密文。
+- `OPENAI_API_KEY`：OpenAI 的 API 密钥。
 
 [点击这里](https://developer.twitter.com/en/portal/dashboard) 来获取 Twitter 相关的 token。
 

@@ -7,8 +7,14 @@ compatibility_flags = [ "nodejs_compat" ]
 # Note: Use secrets to store sensitive data.
 # Docs: https://developers.cloudflare.com/workers/platform/environment-variables
 [vars]
-ALLOW_USER_IDS = ['niracler', 'niracler_channel', '1087968824']
+ALLOW_USER_IDS = ['niracler', 'niracler_channel', '1087968824', '-1001305777189', '-1001362334086' ]
+TELEGRAM_BOT_USERNAME = 'nyaruko_aibot'
 # MY_VARIABLE = "production_value"
+
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "tg"
+database_id = "de7c58ca-307c-4f29-885d-00e7af37f51d"
 
 # Bind a KV Namespace. Use KV as persistent storage for small key-value pairs.
 # Docs: https://developers.cloudflare.com/workers/runtime-apis/kv

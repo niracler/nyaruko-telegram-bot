@@ -4,7 +4,10 @@ export interface Env {
 	TWITTER_API_SECRET: string
 	TWITTER_ACCESS_TOKEN: string
 	TWITTER_ACCESS_TOKEN_SECRET: string
+	OPENAI_API_KEY: string
     ALLOW_USER_IDS: string[]
+	TELEGRAM_BOT_USERNAME: string
+	DB: D1Database
 
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace
@@ -24,6 +27,9 @@ export interface Env {
 
 interface TelegramChat {
 	id: number      // Chat ID
+	title?: string  // Chat title, optional
+	username?: string // Username, optional
+	type: string // Type of chat, one of "private", "group", "supergroup" or "channel"
 	// 添加更多的聊天相关字段 | Add more chat related fields
 }
 
@@ -43,9 +49,15 @@ interface TelegramMessage {
 	from: {
 		username: string // 发送者的用户名 | Sender's username
 		id: string // 发送者的ID | Sender's ID
+		first_name: string // 发送者的名字 | Sender's first name
 	},
+	sender_chat?: TelegramChat // Sender's chat object, optional
 	caption?: string
 	photo?: TelegramPhoto[] // TelegramPhoto需要根据API定义 | TelegramPhoto needs to be defined according to the API
+	forward_from_chat?: TelegramChat // Forwarded from chat object, optional
+	forward_from_message_id?: number // Forwarded from message ID, optional
+	media_group_id?: string // Media group ID
+	date: number // Unix timestamp
 	// 添加更多的消息相关字段 | Add more message related fields
 }
 

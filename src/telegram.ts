@@ -57,7 +57,7 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
 }
 
 // Process the '/sync_twitter' command
-async function processSyncTwitterCommand(update: TelegramUpdate, env: Env) {
+async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Promise<string> {
     if (!update.message?.reply_to_message?.photo?.length) {
         return 'No photo found to sync with Twitter.'
     }
@@ -107,7 +107,7 @@ async function processSyncTwitterCommand(update: TelegramUpdate, env: Env) {
             }
 
             const tweet = await twitter.postTweet(tweetContentTemp, tweetMediaIdsTemp, lastTweetId, env)
-            
+
             if (!tweet.data?.id) {
                 replyText += `Failed to post tweet: ${JSON.stringify(tweet)}` + '\n'
             } else {
@@ -118,9 +118,9 @@ async function processSyncTwitterCommand(update: TelegramUpdate, env: Env) {
             tweetContent = tweetContent.slice(tweetContentTemp.length)
         }
 
-        await sendReplyToTelegram(update.message.chat.id, replyText, update.message.message_id, env)
+        return replyText
     } catch (error) {
-        await sendReplyToTelegram(update.message.chat.id, `Failed to post tweet: ${error}`, update.message.message_id, env)
+        return `Failed to post tweet: ${error}`
     }
 }
 

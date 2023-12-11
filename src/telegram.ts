@@ -90,6 +90,10 @@ async function processSyncTwitterCommand(update: TelegramUpdate, env: Env) {
                 if (tweetContentTemp.length + line.length > 140) {
                     break
                 }
+                if (line === '---') {
+                    tweetContentTemp += '   '
+                    break
+                }
                 tweetContentTemp += line + '\n'
             }
 

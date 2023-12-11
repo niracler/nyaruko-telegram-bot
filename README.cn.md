@@ -10,6 +10,8 @@
 
 通过 `/sync_twitter` 命令，Nyaruko 可以将 Telegram 中的信息同步到 Twitter 上。让你的思绪像翅膀一样，飞跃到另一个社交圈。🕊️ 不过呢，Nyaruko 还在成长中，当前还不支持超链接以及处理 Telegram 的 `media_group`。这需要在 Cloudflare 中巧妙地缓存历史，相信不久之后，Nyaruko 将学会这项新技能！🎓
 
+详情请看 [这里](https://github.com/niracler/nyaruko-telegram-bot/pull/2), 有更完整的例子。
+
 <div align=center>
   <img width="400" src="doc/image2.png">
   <img width="400" src="doc/image1.png">

@@ -66,7 +66,9 @@ async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Prom
         // select same media group id from database
         let photoIdList = []
         if (!update.message.reply_to_message.media_group_id) {
-            return 'No media group id found to sync with Twitter.'
+            if (update.message.reply_to_message.photo?.length) {
+                photoIdList = [update.message.reply_to_message.photo[update.message.reply_to_message.photo.length - 1].file_id]
+            }
         } else {
             const mediaGroup = await env.DB.prepare(`
                 SELECT * FROM telegram_messages WHERE media_group_id = ?

@@ -84,7 +84,7 @@ async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Prom
             tweetMediaIds.push(media.media_id_string)
         }
 
-        let tweetContent = `${update.message.reply_to_message.caption} #sync_from_telegram`
+        let tweetContent = `${update.message.reply_to_message.caption || update.message.reply_to_message.text} #sync_from_telegram`
         let lastTweetId: string | undefined = undefined
         let mediaIdIndex = 0
 

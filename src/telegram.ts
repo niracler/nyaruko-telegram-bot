@@ -40,9 +40,8 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
         // Need to check both user ID and username because some users don't have a username
     } else if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
         replyText = 'You are not allowed to interact with this bot.'
-        return
     } else if (update.message.text?.startsWith('/sync_twitter')) {
-        return await processSyncTwitterCommand(update, env)
+        replyText = await processSyncTwitterCommand(update, env)
     } else if (update.message.text?.includes(`@${env.TELEGRAM_BOT_USERNAME}`)) {
         replyText = await processNyCommand(update, env)
     } else if (update.message.text?.startsWith('/ny')) {
@@ -58,17 +57,23 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
 
 // Process the '/sync_twitter' command
 async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Promise<string> {
-    if (!update.message?.reply_to_message?.photo?.length) {
-        return 'No photo found to sync with Twitter.'
+    if (!update.message?.reply_to_message) {
+        return 'No message found to sync with Twitter.'
     }
 
     try {
         // select same media group id from database
-        const mediaGroup = await env.DB.prepare(`
-            SELECT * FROM telegram_messages WHERE media_group_id = ?
-        `).bind(update.message.reply_to_message.media_group_id).all()
-
-        const photoIdList = mediaGroup.results.map((message: any) => message.photo_file_id)
+        let photoIdList = []
+        if (!update.message.reply_to_message.media_group_id) {
+            if (update.message.reply_to_message.photo?.length) {
+                photoIdList = [update.message.reply_to_message.photo[update.message.reply_to_message.photo.length - 1].file_id]
+            }
+        } else {
+            const mediaGroup = await env.DB.prepare(`
+                SELECT * FROM telegram_messages WHERE media_group_id = ?
+            `).bind(update.message.reply_to_message.media_group_id).all()
+            photoIdList = mediaGroup.results.map((message: any) => message.photo_file_id)
+        }
 
         const tweetMediaIds = []
         for (const photoId of photoIdList) {
@@ -78,7 +83,7 @@ async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Prom
             tweetMediaIds.push(media.media_id_string)
         }
 
-        let tweetContent = `${update.message.reply_to_message.caption} #sync_from_telegram`
+        let tweetContent = `${update.message.reply_to_message.caption || update.message.reply_to_message.text} #sync_from_telegram`
         let lastTweetId: string | undefined = undefined
         let mediaIdIndex = 0
 

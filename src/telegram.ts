@@ -40,7 +40,6 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
         // Need to check both user ID and username because some users don't have a username
     } else if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
         replyText = 'You are not allowed to interact with this bot.'
-        return
     } else if (update.message.text?.startsWith('/sync_twitter')) {
         replyText = await processSyncTwitterCommand(update, env)
     } else if (update.message.text?.includes(`@${env.TELEGRAM_BOT_USERNAME}`)) {

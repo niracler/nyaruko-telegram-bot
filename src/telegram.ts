@@ -36,16 +36,16 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
         replyText = await processGetUserIdCommand(update, env)
     } else if (update.message.text?.startsWith('/ping')) {
         replyText = await processPingCommand(update, env)
-
-        // Need to check both user ID and username because some users don't have a username
-    } else if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
-        replyText = 'You are not allowed to interact with this bot.'
-    } else if (update.message.text?.startsWith('/sync_twitter')) {
-        replyText = await processSyncTwitterCommand(update, env)
     } else if (update.message.text?.includes(`@${env.TELEGRAM_BOT_USERNAME}`)) {
         replyText = await processNyCommand(update, env)
     } else if (update.message.text?.startsWith('/ny')) {
         replyText = await processNyCommand(update, env)
+
+        // Need to check both user ID and username because some users don't have a username
+    } else if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
+        replyText = 'You are not allowed to sync with Twitter. Please contact @niracler to get access.'
+    } else if (update.message.text?.startsWith('/sync_twitter')) {
+        replyText = await processSyncTwitterCommand(update, env)
     } else {
         // replyText = await processDebugCommand(update, env)
         return

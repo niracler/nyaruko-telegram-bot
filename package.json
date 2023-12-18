@@ -18,6 +18,6 @@
     "crypto-js": "^4.2.0",
     "oauth-1.0a": "^2.2.6",
     "openai": "^4.20.1",
-    "telegramify-markdown": "git+ssh://git@github.com/niracler/telegramify-markdown.git"
+    "telegramify-markdown": "git+ssh://git@github.com/niracler/telegramify-markdown.git#master"
   }
 }

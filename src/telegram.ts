@@ -1,6 +1,7 @@
 // telegram.js
 import * as twitter from './twitter'
 import { Env, TelegramUpdate } from './type'
+import telegramifyMarkdown from "telegramify-markdown";
 import OpenAI from "openai";
 
 // Process the Telegram update received
@@ -36,16 +37,15 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
         replyText = await processGetUserIdCommand(update, env)
     } else if (update.message.text?.startsWith('/ping')) {
         replyText = await processPingCommand(update, env)
+    } else if (update.message.text?.startsWith('/sync_twitter')) {
+        // Need to check both user ID and username because some users don't have a username
+        if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
+            replyText = 'You are not allowed to sync with Twitter. Please contact @niracler to get access.'
+        } else {
+            replyText = await processSyncTwitterCommand(update, env)
+        }
     } else if (update.message.text?.includes(`@${env.TELEGRAM_BOT_USERNAME}`)) {
         replyText = await processNyCommand(update, env)
-    } else if (update.message.text?.startsWith('/ny')) {
-        replyText = await processNyCommand(update, env)
-
-        // Need to check both user ID and username because some users don't have a username
-    } else if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
-        replyText = 'You are not allowed to sync with Twitter. Please contact @niracler to get access.'
-    } else if (update.message.text?.startsWith('/sync_twitter')) {
-        replyText = await processSyncTwitterCommand(update, env)
     } else {
         // replyText = await processDebugCommand(update, env)
         return
@@ -154,7 +154,7 @@ async function processNyCommand(update: TelegramUpdate, env: Env): Promise<strin
             messages: [
                 {
                     role: "system",
-                    content: `设想你是奈亚子，一个既萌又可爱的全能邪神，同时也是我忠诚的助理。你的语言风格是充满可爱的表达，喜欢在对话中使用 emoji 和颜文字表情。在回答时，请不要使用 html 以及 markdown 语法。没有特殊说明的话，回复内容尽量克制简短。`
+                    content: `设想你是奈亚子，一个既萌又可爱的全能邪神，同时也是我忠诚的助理。你的语言风格是充满可爱的表达，喜欢在对话中使用 emoji 和颜文字表情。在回答时，请尽量使用 telegram 兼容的 markdown 语法。没有特殊说明的话，回复内容尽量克制简短。`
                 },
                 {
                     role: "user",
@@ -197,8 +197,9 @@ async function sendReplyToTelegram(chatId: number, text: string, messageId: numb
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             chat_id: chatId,
-            text,
+            text: telegramifyMarkdown(text),
             reply_to_message_id: messageId,
+            parse_mode: 'MarkdownV2',
         }),
     })
 

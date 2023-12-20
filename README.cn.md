@@ -23,7 +23,7 @@
 - `/ping` - 测试机器人是否在线。
 - `/getchatid` - 获取当前对话的 ID。
 - `/getuserid` - 获取当前用户的 ID。
-- `/ny` - 与 Nyaruko 机器人进行互动。
+- @nyaruko_aibot - 可以跟奈亚子聊天哦！
 
 ### 更多功能敬请期待
 

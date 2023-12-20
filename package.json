@@ -1,6 +1,6 @@
 {
   "name": "nyaruko-telegram-bot",
-  "version": "0.0.3",
+  "version": "0.0.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -11,9 +11,8 @@
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
-    "commit-changes": "git commit -am \"chore: release new version\" || true",
-    "tag": "git tag v$(node -p \"require('./package.json').version\")",
-    "release": "npm run release:version ${1} && npm run changelog && npm run commit-changes && npm run tag && npm run release:push",
+    "commit-changes": "git commit -am \"chore: update changelog\"|| true",
+    "release": "npm run release:version ${1} && npm run changelog && npm run commit-changes && npm run release:push",
     "release:version": "npm version ${1:-patch} -m \"chore(release): release %s\"",
     "release:push": "git push && git push --tags"
   },

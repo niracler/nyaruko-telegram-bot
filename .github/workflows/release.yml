@@ -1,13 +1,31 @@
-name: Main
+name: Create Release
 
-on: push
+on:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Release
+      - uses: actions/checkout@v2
+      
+      # Step to extract the changelog from CHANGELOG.md
+      - name: Get changelog entry
+        run: |
+          VERSION=$(echo $GITHUB_REF | sed 's,.*/\(.*\),\1,')
+          CHANGELOG_CONTENT="$(awk -v version="${VERSION#v}" 'BEGIN { version_tag = "## \\[" version "\\]" } $0 ~ version_tag {print_lines = 1} $0 ~ "^## \\[" && $0 !~ version_tag {print_lines = 0} print_lines' CHANGELOG.md)"
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      # Create GitHub Release with changelog content as release description
+      - name: Create Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          body: ${{ env.CHANGELOG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

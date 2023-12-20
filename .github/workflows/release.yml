@@ -1,40 +1,31 @@
-name: Automated Release
+name: Create Release
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
 
 jobs:
-  create-release:
+  release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-        with:
-          # get all history so we can get the correct version number
-          fetch-depth: 0 
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-
-      - name: Generate new version and changelog
-        run: npx standard-version
-        env:
-          # 标准版本使用GITHUB_TOKEN来自动创建tag
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push changes
+      - uses: actions/checkout@v2
+      
+      # Step to extract the changelog from CHANGELOG.md
+      - name: Get changelog entry
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git push --follow-tags origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION=$(echo $GITHUB_REF | sed 's,.*/\(.*\),\1,')
+          CHANGELOG_CONTENT="$(awk -v version="${VERSION#v}" 'BEGIN { version_tag = "## \\[" version "\\]" } $0 ~ version_tag {print_lines = 1} $0 ~ "^## \\[" && $0 !~ version_tag {print_lines = 0} print_lines' CHANGELOG.md)"
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
-      - name: Create GitHub Release
+      # Create GitHub Release with changelog content as release description
+      - name: Create Release
         uses: softprops/action-gh-release@v1
+        with:
+          body: ${{ env.CHANGELOG }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

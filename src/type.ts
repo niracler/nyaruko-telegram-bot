@@ -5,7 +5,7 @@ export interface Env {
 	TWITTER_ACCESS_TOKEN: string
 	TWITTER_ACCESS_TOKEN_SECRET: string
 	OPENAI_API_KEY: string
-    ALLOW_USER_IDS: string[]
+	ALLOW_USER_IDS: string[]
 	TELEGRAM_BOT_USERNAME: string
 	DB: D1Database
 
@@ -41,7 +41,7 @@ interface TelegramPhoto {
 	file_size?: number // 文件大小（可选） | File size (optional)
 }
 
-interface TelegramMessage {
+export interface TelegramMessage {
 	message_id: number // Message ID
 	chat: TelegramChat // Chat object
 	text?: string      // Received message text, optional
@@ -63,6 +63,14 @@ interface TelegramMessage {
 
 export interface TelegramUpdate {
 	update_id: number      // Update ID from Telegram
-	message?: TelegramMessage // Message object, optional
+	message: TelegramMessage // Message object, optional
 	// 添加更多的更新相关字段| Add more update related fields
+}
+
+export interface TwitterResponse {
+	data?: {
+		id: string
+		text: string
+	}
+	errors?: any
 }

@@ -1,6 +1,13 @@
 import { Env, TelegramUpdate } from "../type"
 
-export async function sync2database(update: TelegramUpdate, env: Env) {
+/**
+ * Inserts the Telegram update data into the database.
+ * 
+ * @param update - The Telegram update object.
+ * @param env - The environment object.
+ * @returns A promise that resolves when the data is successfully inserted into the database.
+ */
+export async function syncToDatabase(update: TelegramUpdate, env: Env) {
 
     await env.DB.prepare(`
     INSERT INTO telegram_messages (

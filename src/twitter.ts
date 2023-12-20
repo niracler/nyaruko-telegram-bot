@@ -3,6 +3,12 @@ import { HmacSHA1, enc } from 'crypto-js'
 import { Buffer } from 'node:buffer'
 import { Env } from "./type"
 
+/**
+ * Uploads media to Twitter.
+ * @param mediaData The media data to be uploaded.
+ * @param env The environment variables.
+ * @returns The response from the Twitter API.
+ */
 export async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Promise<any> {
     const oauth = new OAuth({
         consumer: { key: env.TWITTER_API_KEY, secret: env.TWITTER_API_SECRET },
@@ -25,7 +31,6 @@ export async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Pr
         },
     }
 
-    // 初始化媒体上传以获取media_id | Initialize media upload to get media_id
     const response = await fetch(requestData.url, {
         method: 'POST',
         headers: {
@@ -38,6 +43,15 @@ export async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Pr
     return await response.json()
 }
 
+/**
+ * Posts a tweet on Twitter.
+ * 
+ * @param text - The text content of the tweet.
+ * @param mediaList - An array of media IDs to be attached to the tweet.
+ * @param replyId - The ID of the tweet to reply to, if any.
+ * @param env - The environment variables containing the Twitter API credentials.
+ * @returns A Promise that resolves to the response from the Twitter API.
+ */
 export async function postTweet(text: string, mediaList: string[], replyId: string | undefined, env: Env): Promise<any> {
     const oauth = new OAuth({
         consumer: { key: env.TWITTER_API_KEY, secret: env.TWITTER_API_SECRET },
@@ -57,16 +71,10 @@ export async function postTweet(text: string, mediaList: string[], replyId: stri
         method: 'POST',
     }
 
-    let msg:any = { 
-        text, 
-    }
-
-    if (replyId) {
-        msg.reply = { in_reply_to_tweet_id: replyId }
-    }
-
-    if (mediaList.length > 0) {
-        msg.media = { media_ids: mediaList }
+    const msg = {
+        text,
+        reply: replyId ? { in_reply_to_tweet_id: replyId } : undefined,
+        media: mediaList.length > 0 ? { media_ids: mediaList } : undefined,
     }
 
     const response = await fetch(requestData.url, {

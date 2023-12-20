@@ -1,5 +1,13 @@
 import { Env, TelegramMessage } from "../type"
 
+/**
+ * Retrieves the URL list of Telegram photos from a given message.
+ * If the message belongs to a media group, it retrieves the photos from all messages in the group.
+ * 
+ * @param message - The Telegram message object.
+ * @param env - The environment object containing necessary configurations.
+ * @returns A promise that resolves to an array of photo URLs.
+ */
 export async function getTelegramPhotoUrlList(message: TelegramMessage, env: Env): Promise<string[]> {
     let photoIdList = []
     if (!message.media_group_id) {
@@ -22,7 +30,13 @@ export async function getTelegramPhotoUrlList(message: TelegramMessage, env: Env
     return photoUrlList
 }
 
-// Fetch the file URL from Telegram using the file_id
+/**
+ * Retrieves the URL of a file from the Telegram API based on the file ID.
+ * @param fileId The ID of the file.
+ * @param botSecret The secret token of the Telegram bot.
+ * @returns The URL of the file.
+ * @throws An error if the Telegram API getFile request fails.
+ */
 async function getTelegramFileUrl(fileId: string, botSecret: string): Promise<string> {
     const fileResponse = await fetch(`https://api.telegram.org/bot${botSecret}/getFile?file_id=${fileId}`)
     if (!fileResponse.ok) {

@@ -3,6 +3,13 @@ import { ChatCompletionContentPart, ChatCompletionMessageParam } from 'openai/re
 import { getTelegramPhotoUrlList } from './utils'
 import { Env, TelegramUpdate, TelegramMessage } from '../type'
 
+/**
+ * Processes the Ny command by generating a response using OpenAI's chat completion API.
+ * 
+ * @param update - The Telegram update object containing the message to process.
+ * @param env - The environment object containing the OpenAI API key.
+ * @returns A promise that resolves to a string representing the generated response.
+ */
 export async function processNyCommand(update: TelegramUpdate, env: Env): Promise<string> {
     if (!update.message?.text && !update.message?.caption) return 'No text found to process.'
 
@@ -43,6 +50,12 @@ export async function processNyCommand(update: TelegramUpdate, env: Env): Promis
     }
 }
 
+/**
+ * Converts a Telegram message to a content part for chat completion.
+ * @param message The Telegram message to convert.
+ * @param env The environment configuration.
+ * @returns A promise that resolves to an array of ChatCompletionContentPart objects or a string.
+ */
 async function messageToContentPart(message: TelegramMessage | undefined, env: Env): Promise<ChatCompletionContentPart[] | string> {
     if (!message) return ""
 

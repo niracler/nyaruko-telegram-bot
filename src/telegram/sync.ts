@@ -2,7 +2,13 @@ import * as twitter from '../twitter'
 import { Env, TelegramUpdate, TwitterResponse } from "../type"
 import { getTelegramPhotoUrlList } from "./utils"
 
-// Process the '/sync_twitter' command
+/**
+ * Processes the sync /sync_twitter command.
+ * 
+ * @param update - The Telegram update.
+ * @param env - The environment variables.
+ * @returns A promise that resolves to a string indicating the result of the sync operation.
+ */
 export async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Promise<string> {
     if (!update.message?.reply_to_message) {
         return 'No message found to sync with Twitter.'
@@ -30,6 +36,15 @@ export async function processSyncTwitterCommand(update: TelegramUpdate, env: Env
     }
 }
 
+
+/**
+ * Posts tweets with content and media to Twitter.
+ * 
+ * @param tweetContent - The content of the tweet.
+ * @param tweetMediaIds - An array of media IDs to be attached to the tweet.
+ * @param env - The environment configuration.
+ * @returns A promise that resolves to an array of TwitterResponse objects.
+ */
 async function postTweets(tweetContent: string, tweetMediaIds: string[], env: Env): Promise<TwitterResponse[]> {
     const tweets = []
     let lastTweetId: string | undefined = undefined
@@ -62,6 +77,12 @@ async function postTweets(tweetContent: string, tweetMediaIds: string[], env: En
     return tweets
 }
 
+/**
+ * Uploads photos to Twitter and returns an array of media IDs.
+ * @param photoUrlList - The list of photo URLs to upload.
+ * @param env - The environment configuration.
+ * @returns A promise that resolves to an array of media IDs.
+ */
 async function uploadPhotosToTwitter(photoUrlList: string[], env: Env): Promise<string[]> {
     const tweetMediaIds = []
     for (const photoUrl of photoUrlList) {

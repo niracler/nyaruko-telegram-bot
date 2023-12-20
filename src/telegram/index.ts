@@ -2,7 +2,7 @@ import { Env, TelegramUpdate } from '../type'
 import telegramifyMarkdown from "telegramify-markdown"
 import { processSyncTwitterCommand } from './sync'
 import { processNyCommand } from './ai'
-import { sync2database } from './db'
+import { syncToDatabase } from './db'
 
 // Process the Telegram update received
 export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
@@ -11,7 +11,7 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
     const fromUsername = update.message?.from?.username || ''
 
     try {
-        await sync2database(update, env)
+        await syncToDatabase(update, env)
     } catch (error) {
         await sendReplyToTelegram(
             update.message.chat.id,

@@ -8,7 +8,7 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { handleTelegramUpdate } from './telegram/telegram'
+import { handleTelegramUpdate } from './telegram'
 import { Env, TelegramUpdate } from './type'
 
 export default {

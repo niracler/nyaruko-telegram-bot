@@ -22,7 +22,7 @@
     "@types/node": "^20.10.0",
     "conventional-changelog-cli": "^4.1.0",
     "typescript": "^5.0.4",
-    "wrangler": "^3.0.0"
+    "wrangler": "^3.22.1"
   },
   "dependencies": {
     "crypto-js": "^4.2.0",

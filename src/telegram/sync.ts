@@ -18,7 +18,12 @@ export async function processSyncTwitterCommand(update: TelegramUpdate, env: Env
         const photoUrlList = await getTelegramPhotoUrlList(update.message.reply_to_message, env)
         const tweetMediaIds = await uploadPhotosToTwitter(photoUrlList, env)
 
-        const tweetContent = `${update.message.reply_to_message.caption || update.message.reply_to_message.text} #from_telegram`
+        let tweetContent = update.message.reply_to_message.caption || update.message.reply_to_message.text
+        if (!tweetContent) {
+            return `No content found to sync with Twitter. ${JSON.stringify(update.message.reply_to_message)}}`
+        }
+
+        tweetContent = `${tweetContent} #from_telegram`
         const tweets = await postTweets(tweetContent, tweetMediaIds, env)
 
         let replyText = ''

@@ -1,5 +1,6 @@
 import * as twitter from '../twitter'
 import { Env, TelegramUpdate, TwitterResponse } from "../type"
+import { createShort, uploadMediaToXLog } from '../xlog'
 import { getTelegramPhotoUrlList } from "./utils"
 
 /**
@@ -96,4 +97,41 @@ async function uploadPhotosToTwitter(photoUrlList: string[], env: Env): Promise<
         tweetMediaIds.push(media.media_id_string)
     }
     return tweetMediaIds
+}
+
+async function uploadPhotosToXLog(photoUrlList: string[], env: Env): Promise<string[]> {
+    const attachmentUrlList = []
+    for (const photoUrl of photoUrlList) {
+        const mediaData = await fetch(photoUrl).then(res => res.arrayBuffer())
+        const media = await uploadMediaToXLog(mediaData, env)
+        attachmentUrlList.push(media)
+    }
+    return attachmentUrlList
+}
+
+export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): Promise<string> {
+    if (!update.message?.reply_to_message) {
+        return 'No message found to sync with XLog.'
+    }
+
+    let content = update.message.reply_to_message.text || update.message.reply_to_message.caption || ''
+    content = `${content}\n#from_telegram`
+
+    try {
+        const photoUrlList = await getTelegramPhotoUrlList(update.message.reply_to_message, env)
+        const attachmentUrlList = await uploadPhotosToXLog(photoUrlList, env)
+        // first line is title, rest is content
+        const title = content.split('\n')[0] || 'Untitled'
+        content = content.slice(title.length + 1)
+
+        const response = await createShort(title, content, attachmentUrlList, env)
+
+        if (response.ok === false) {
+            return `Failed to post to XLog: ${response}`
+        } else {
+            return `Your message has been posted to XLog. data: ${JSON.stringify(response.data)}`
+        }
+    } catch (error) {
+        return `Failed to post to XLog: ${error}`
+    }
 }

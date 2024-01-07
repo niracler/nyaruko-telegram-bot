@@ -8,6 +8,7 @@ export interface Env {
 	ALLOW_USER_IDS: string[]
 	TELEGRAM_BOT_USERNAME: string
 	DB: D1Database
+	XLOG_TOKEN: string
 
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace

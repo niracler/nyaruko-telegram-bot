@@ -9,7 +9,7 @@ async function main() {
     const env = {
         XLOG_TOKEN: "...",
     } as Env
-    const res = await uploadMediaToXLog(mediaData, env)
+    const res = await uploadMediaToXLog(mediaData)
     console.log(res)
 
     const res2 = await createShort("很好很好", "测试成功", [res], env)

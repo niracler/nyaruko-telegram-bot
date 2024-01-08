@@ -1,13 +1,14 @@
 import { ipfsUploadFile } from "crossbell/ipfs"
 import { Env } from "./type";
 
-export async function uploadMediaToXLog(mediaData: ArrayBuffer, env: Env): Promise<any> {
+export async function uploadMediaToXLog(mediaData: ArrayBuffer): Promise<any> {
     const file = new File([mediaData], "mediaData")
     return (await ipfsUploadFile(file)).url
 }
 
 export async function createShort(title: string, content: string, attachmentUrlList: string[], env: Env): Promise<any> {
-    const url = `https://indexer.crossbell.io/v1/siwe/contract/characters/57410/notes`
+    const characterId = 57410
+    const url = `https://indexer.crossbell.io/v1/siwe/contract/characters/${characterId}/notes`
 
     const response = await fetch(url, {
         method: 'PUT',

@@ -7,7 +7,7 @@ export async function uploadMediaToXLog(mediaData: ArrayBuffer): Promise<string>
 }
 
 export async function createShort(title: string, content: string, attachmentUrlList: string[], env: Env): Promise<any> {
-    const characterId = 57410
+    const characterId = env.XLOG_CHARACTER_ID
     const url = `https://indexer.crossbell.io/v1/siwe/contract/characters/${characterId}/notes`
 
     const response = await fetch(url, {

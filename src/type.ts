@@ -1,14 +1,15 @@
 export interface Env {
 	TELEGRAM_BOT_SECRET: string
+	TELEGRAM_BOT_USERNAME: string
+	XLOG_TOKEN: string
+
 	TWITTER_API_KEY: string
 	TWITTER_API_SECRET: string
 	TWITTER_ACCESS_TOKEN: string
 	TWITTER_ACCESS_TOKEN_SECRET: string
 	OPENAI_API_KEY: string
 	ALLOW_USER_IDS: string[]
-	TELEGRAM_BOT_USERNAME: string
 	DB: D1Database
-	XLOG_TOKEN: string
 
 	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
 	// MY_KV_NAMESPACE: KVNamespace

@@ -103,7 +103,7 @@ async function uploadPhotosToXLog(photoUrlList: string[], env: Env): Promise<str
     const attachmentUrlList = []
     for (const photoUrl of photoUrlList) {
         const mediaData = await fetch(photoUrl).then(res => res.arrayBuffer())
-        const media = await uploadMediaToXLog(mediaData, env)
+        const media = await uploadMediaToXLog(mediaData)
         attachmentUrlList.push(media)
     }
     return attachmentUrlList
@@ -129,7 +129,7 @@ export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): 
         if (response.ok === false) {
             return `Failed to post to XLog: ${response}`
         } else {
-            return `Your message has been posted to XLog. data: ${JSON.stringify(response.data)}`
+            return `Your message has been posted to XLog. data: ${JSON.stringify(response.data)}, metadata: ${JSON.stringify(attachmentUrlList)}, response: ${JSON.stringify(photoUrlList)}`
         }
     } catch (error) {
         return `Failed to post to XLog: ${error}`

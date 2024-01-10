@@ -1,7 +1,7 @@
 import { ipfsUploadFile } from "crossbell/ipfs"
 import { Env } from "./type";
 
-export async function uploadMediaToXLog(mediaData: ArrayBuffer): Promise<any> {
+export async function uploadMediaToXLog(mediaData: ArrayBuffer): Promise<string> {
     const file = new File([mediaData], "mediaData")
     return (await ipfsUploadFile(file)).url
 }

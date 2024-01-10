@@ -15,13 +15,14 @@ With the `/sync_twitter` command, Nyaruko can synchronize messages from Telegram
 for more details, see [here](https://github.com/niracler/nyaruko-telegram-bot/pull/2), there are more complete examples.
 
 <div align=center>
-  <img width="400" src="doc/image2.png">
-  <img width="400" src="doc/image1.png">
+  <img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/a557d8c6-f75a-4712-9c24-cea244668acf">
+  <img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/da45b9dc-9d18-4f15-b6d1-a7ba2b10c74b">
 </div>
 
 ### All Features list
 
 - `/sync_twitter` - Sync msg to Twitter.
+- `/sync_xlog` - Sync msg to xLog as Shorts. (POST is not supported yet)
 - `/ping` - Test if the bot is online.
 - `/getchatid` - Get the ID of the current chat.
 - `/getuserid` - Get the ID of the current user.
@@ -42,6 +43,8 @@ To get Nyaruko up and running in your environment, please follow these steps:
 ### Necessary Environment Variables
 
 Nyaruko requires the following environment variables to function:
+
+<!-- TODO: should be a table -->
 
 - `ALLOWED_USER_IDS`: The comma-separated list of user IDs allowed to use the bot. This is set in `wrangler.yml` and does not need to be set using the `wrangler secret` command.
 - `TELEGRAM_BOT_SECRET`: Your Telegram bot token.

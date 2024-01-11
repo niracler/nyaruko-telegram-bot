@@ -111,11 +111,31 @@ wrangler d1 execute tg --file=./schema.sql
 
 ### 部署到 cloudflare worker
 
+完成上述步骤后，就可以将 Nyaruko 部署到 Cloudflare Workers 上了。
+
 ```bash
 wrangler deploy
 ```
 
+### 设置 Webhook
+
+```bash
+curl -F "url=https://your-worker.your-name.workers.dev/" https://api.telegram.org/bot<TELEGRAM_BOT_SECRET>/setWebhook
+```
+
 届此，Nyaruko 机器人已经部署完成，您可以在 Telegram 上进行测试了。
+
+### 奈亚子的命令注册 (可选)
+
+找到 botfather，然后输入 `/setcommands`，然后选择你的机器人，然后输入以下内容：
+
+```bash
+sync_twitter - Sync msg to Twitter.
+sync_xlog - Sync msg to Twitter.
+ping - Test if the bot is online.
+getchatid - Get the ID of the current chat.
+getuserid - Get the ID of the current user.
+```
 
 ## 奈亚子的小秘密
 

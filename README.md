@@ -119,6 +119,26 @@ After completing the above steps, you can deploy Nyaruko to Cloudflare Workers.
 wrangler deploy
 ```
 
+### Set Webhook for Telegram Bot
+
+```bash
+curl -F "url=https://yourwebhook.url" -F "certificate=@/path/to/certificate.pem" https://api.telegram.org/bot<YourBotToken>/setWebhook
+```
+
+Now, Nyaruko is ready to use! 🎉  
+
+### Set Commands for Nyaruko (Not necessary)
+
+Find botfather, then enter `/setcommands`, then select your bot, and then enter the following content:
+
+```bash
+sync_twitter - Sync msg to Twitter.
+sync_xlog - Sync msg to Twitter.
+ping - Test if the bot is online.
+getchatid - Get the ID of the current chat.
+getuserid - Get the ID of the current user.
+```
+
 ## Little Secret of Nyaruko
 
 The name Nyaruko originates from the Japanese light novel series “Haiyore! Nyaruko-san,” where the heroine Nyaruko is an energetic and positive Cthulhu mythical creature modeled after Nyarlathotep from Lovecraftian Mythos. In the Nyaruko bot, it represents a symbol of intelligence and vitality, not only assisting Niracler in message handling but also adding a touch of two-dimensional fun to life! 🌈

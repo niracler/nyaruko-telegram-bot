@@ -1,28 +1,16 @@
 export interface Env {
 	TELEGRAM_BOT_SECRET: string
+	TELEGRAM_BOT_USERNAME: string
+	XLOG_TOKEN: string
+	XLOG_CHARACTER_ID: string
+
 	TWITTER_API_KEY: string
 	TWITTER_API_SECRET: string
 	TWITTER_ACCESS_TOKEN: string
 	TWITTER_ACCESS_TOKEN_SECRET: string
 	OPENAI_API_KEY: string
 	ALLOW_USER_IDS: string[]
-	TELEGRAM_BOT_USERNAME: string
 	DB: D1Database
-
-	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
-	// MY_KV_NAMESPACE: KVNamespace
-	//
-	// Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
-	// MY_DURABLE_OBJECT: DurableObjectNamespace
-	//
-	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
-	// MY_BUCKET: R2Bucket
-	//
-	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
-	// MY_SERVICE: Fetcher
-	//
-	// Example binding to a Queue. Learn more at https://developers.cloudflare.com/queues/javascript-apis/
-	// MY_QUEUE: Queue
 }
 
 interface TelegramChat {

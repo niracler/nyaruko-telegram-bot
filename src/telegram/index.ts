@@ -1,6 +1,6 @@
 import { Env, TelegramUpdate } from '../type'
 import telegramifyMarkdown from "telegramify-markdown"
-import { processSyncTwitterCommand } from './sync'
+import { processSyncTwitterCommand, processSyncXLogCommand } from './sync'
 import { processNyCommand } from './ai'
 import { syncToDatabase } from './db'
 
@@ -35,6 +35,12 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env) {
             replyText = 'You are not allowed to sync with Twitter. Please contact @niracler to get access.'
         } else {
             replyText = await processSyncTwitterCommand(update, env)
+        }
+    } else if (update.message.text?.startsWith('/sync_xlog')) {
+        if (!allowedUserIds.includes(fromUsername) && !allowedUserIds.includes(fromUserId)) {
+            replyText = 'You are not allowed to sync with XLog. Please contact @niracler to get access.'
+        } else {
+            replyText = await processSyncXLogCommand(update, env)
         }
     } else if (update.message.text?.includes(`@${env.TELEGRAM_BOT_USERNAME}`)) {
         replyText = await processNyCommand(update, env)

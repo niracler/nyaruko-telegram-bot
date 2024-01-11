@@ -8,19 +8,28 @@ Welcome to the exotic Nyaruko Telegram Bot project! 🌟 This one-of-a-kind Tele
 
 Currently, Nyaruko has the following stunning features:
 
+### `/sync_xlog` - Synchronize Telegram messages to xLog as Shorts
+
+With the `/sync_xlog` command, Nyaruko can synchronize messages from Telegram to xLog as Shorts. This feature is still in development and does not support POST yet. 🚧
+
+for more details, see [here](https://github.com/niracler/nyaruko-telegram-bot/pull/6), there are more complete examples.
+
+<img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/fbaac6ed-bcf0-4f25-b706-af75fafb71b0">
+
 ### `/sync_twitter` - Synchronize Telegram messages to Twitter
 
-With the `/sync_twitter` command, Nyaruko can synchronize messages from Telegram to Twitter. Let your thoughts take flight and soar into another social media realm. 🕊️ However, Nyaruko is still growing and currently does not support hyperlinks or handle Telegram's `media_group`. Cleverly caching history in Cloudflare is needed, and it is believed that Nyaruko will soon learn this new skill! 🎓
+With the `/sync_twitter` command, Nyaruko can synchronize messages from Telegram to Twitter.
 
 for more details, see [here](https://github.com/niracler/nyaruko-telegram-bot/pull/2), there are more complete examples.
 
 <div align=center>
-  <img width="400" src="doc/image2.png">
-  <img width="400" src="doc/image1.png">
+  <img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/a557d8c6-f75a-4712-9c24-cea244668acf">
+  <img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/da45b9dc-9d18-4f15-b6d1-a7ba2b10c74b">
 </div>
 
 ### All Features list
 
+- `/sync_xlog` - Sync msg to xLog as Shorts. (POST is not supported yet)
 - `/sync_twitter` - Sync msg to Twitter.
 - `/ping` - Test if the bot is online.
 - `/getchatid` - Get the ID of the current chat.
@@ -39,20 +48,28 @@ To get Nyaruko up and running in your environment, please follow these steps:
 2. Configure the necessary environment variables using the `wrangler secret` command to set them.
 3. Deploy the Nyaruko bot to Cloudflare Workers.
 
-### Necessary Environment Variables
+### Clone and Enter the Project Directory
+
+```bash
+git clone https://github.com/niracler/nyaruko-telegram-bot && cd nyaruko-telegram-bot
+```
+
+### Environment Variables
 
 Nyaruko requires the following environment variables to function:
 
-- `ALLOWED_USER_IDS`: The comma-separated list of user IDs allowed to use the bot. This is set in `wrangler.yml` and does not need to be set using the `wrangler secret` command.
-- `TELEGRAM_BOT_SECRET`: Your Telegram bot token.
-- `TWITTER_API_KEY`: Your Twitter API key.
-- `TWITTER_API_SECRET`: Your Twitter API secret.
-- `TWITTER_ACCESS_TOKEN`: Twitter access token.
-- `TWITTER_ACCESS_TOKEN_SECRET`: Twitter access token secret.
-
-[Click here](https://developer.twitter.com/en/portal/dashboard) to get your Twitter-related tokens.
-
-[Click here](https://core.telegram.org/bots#6-botfather) to learn more about acquiring your Telegram Bot Token.
+|Variable Name|Required|Configuration Method|Description|
+|---|---|---|---|
+|`ALLOWED_USER_IDS`|Yes|`wrangler.yml`|List of user IDs allowed to use the bot, separated by commas|
+|`TELEGRAM_BOT_USERNAME`|No|`wrangler.yml`|Your Telegram bot username, used to enable AI chat|
+|`TELEGRAM_BOT_SECRET`|Yes|`secret`|Your Telegram bot secret key ([details](https://core.telegram.org/bots#how-do-i-create-a-bot))|
+|`XLOG_TOKEN`|No|`secret`|xLog token. Used to enable xlog synchronization|
+|`XLOG_CHARACTER_ID`|No|`secret`|xLog characterId|
+|`TWITTER_API_KEY`|No|`secret`|Your Twitter API key ([details](https://developer.twitter.com/en/portal/dashboard)), used to enable Twitter synchronization|
+|`TWITTER_API_SECRET`|No|`secret`|Your Twitter API secret key|
+|`TWITTER_ACCESS_TOKEN`|No|`secret`|Twitter access token|
+|`TWITTER_ACCESS_TOKEN_SECRET`|No|`secret`|Twitter access token secret|
+|`OPENAI_API_KEY`|No|`secret`|OpenAI API key. Used to enable AI chat|
 
 ### About Setting Environment Variables
 
@@ -69,7 +86,40 @@ wrangler secret put TWITTER_API_KEY
 
 For a more detailed explanation of wrangler configuration and commands, refer to the [official wrangler documentation](https://developers.cloudflare.com/workers/wrangler/commands/) (The wrangler documents are much easier to understand compared to the Twitter documentation, mainly because there are a lot more examples~~).
 
-### Little Secret of Nyaruko
+### Create D1 Database
+
+Because Nyaruko uses D1 as its database, you need to create a D1 database and configure the corresponding environment variables. The configuration method is as follows:
+
+```bash
+wrangler d1 create tg
+```
+
+Then fill in the name of the D1 database returned into `wrangler.toml`, and change the database_id in my configuration file to your D1 database id.
+
+> Note⚠️: Before Nyaruko is deployed, messages with multiple images will not be synchronized to xLog because the corresponding media_group_id cannot be found in the D1 database. Later, we will consider creating a script to synchronize historical messages.
+
+```toml
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "tg"
+database_id = "******"
+```
+
+create database table
+  
+```bash
+wrangler d1 execute tg --file=./schema.sql
+```
+
+### Deploy to Cloudflare Workers
+
+After completing the above steps, you can deploy Nyaruko to Cloudflare Workers.
+
+```bash
+wrangler deploy
+```
+
+## Little Secret of Nyaruko
 
 The name Nyaruko originates from the Japanese light novel series “Haiyore! Nyaruko-san,” where the heroine Nyaruko is an energetic and positive Cthulhu mythical creature modeled after Nyarlathotep from Lovecraftian Mythos. In the Nyaruko bot, it represents a symbol of intelligence and vitality, not only assisting Niracler in message handling but also adding a touch of two-dimensional fun to life! 🌈
 

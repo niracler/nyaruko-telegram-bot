@@ -114,10 +114,19 @@ wrangler d1 execute tg --file=./schema.sql
 完成上述步骤后，就可以将 Nyaruko 部署到 Cloudflare Workers 上了。
 
 ```bash
-wrangler deploy
+$ wrangler deploy
+  ...
+Total Upload: 708.54 KiB / gzip: 123.26 KiB
+Uploaded nyaruko-telegram-bot (3.10 sec)
+Published nyaruko-telegram-bot (0.44 sec)
+  https://your-worker.your-name.workers.dev/"
+Current Deployment ID: ***
+  ...
 ```
 
-### 设置 Webhook
+### 设置奈亚子的 Webhook
+
+将奈亚子的 Webhook 设置为您 Cloudflare Workers 地址，例如：
 
 ```bash
 curl -F "url=https://your-worker.your-name.workers.dev/" https://api.telegram.org/bot<TELEGRAM_BOT_SECRET>/setWebhook

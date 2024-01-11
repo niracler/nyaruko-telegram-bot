@@ -116,13 +116,22 @@ wrangler d1 execute tg --file=./schema.sql
 After completing the above steps, you can deploy Nyaruko to Cloudflare Workers.
 
 ```bash
-wrangler deploy
+$ wrangler deploy
+  ...
+Total Upload: 708.54 KiB / gzip: 123.26 KiB
+Uploaded nyaruko-telegram-bot (3.10 sec)
+Published nyaruko-telegram-bot (0.44 sec)
+  https://your-worker.your-name.workers.dev/"
+Current Deployment ID: ***
+  ...
 ```
 
 ### Set Webhook for Telegram Bot
 
+After deploying Nyaruko to Cloudflare Workers, you need to set the webhook for the Telegram bot. The configuration method is as follows:
+
 ```bash
-curl -F "url=https://yourwebhook.url" -F "certificate=@/path/to/certificate.pem" https://api.telegram.org/bot<YourBotToken>/setWebhook
+curl -F "url=https://your-worker.your-name.workers.dev/" https://api.telegram.org/bot<TELEGRAM_BOT_SECRET>/setWebhook
 ```
 
 Now, Nyaruko is ready to use! 🎉  

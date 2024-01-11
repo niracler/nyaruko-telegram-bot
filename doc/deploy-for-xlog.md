@@ -83,3 +83,4 @@ wrangler deploy
 ## 参考资料
 
 - [cloudflare worker 文档](https://developers.cloudflare.com/workers) - cloudflare 的文档是真的好，而且还有中文版
+- [技术角度折腾 xlog】更顺畅的使用体验 2 深入理解 xlog 的鉴权](https://blog.ijust.cc/play-xlog-02) - 辛宝 Otto 的 xlog 教程，写的很详细，而且还有视频教程～～

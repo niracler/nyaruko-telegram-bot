@@ -9,7 +9,6 @@ compatibility_flags = [ "nodejs_compat" ]
 [vars]
 ALLOW_USER_IDS = ['niracler', 'niracler_channel', '1087968824', '-1001305777189', '-1001362334086' ]
 TELEGRAM_BOT_USERNAME = 'nyaruko_aibot'
-# MY_VARIABLE = "production_value"
 
 [[d1_databases]]
 binding = "DB" # i.e. available in your Worker on env.DB

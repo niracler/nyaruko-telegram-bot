@@ -6,9 +6,17 @@
 
 目前，Nyaruko 机器人能够实现以下惊艳的功能：
 
+### `/sync_xlog` - 将 Telegram 信息同步到 xLog Shorts 上
+
+通过 `/sync_xlog` 命令，Nyaruko 可以将 Telegram 中的信息同步到 xLog Shorts 上。不过呢，Nyaruko 还在成长中，当前还不支持同步 POST。
+
+详情请看 [这里](https://github.com/niracler/nyaruko-telegram-bot/pull/6), 有更完整的例子。
+
+<img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/fbaac6ed-bcf0-4f25-b706-af75fafb71b0">
+
 ### `/sync_twitter` - 将 Telegram 信息同步到 Twitter
 
-通过 `/sync_twitter` 命令，Nyaruko 可以将 Telegram 中的信息同步到 Twitter 上。让你的思绪像翅膀一样，飞跃到另一个社交圈。🕊️ 不过呢，Nyaruko 还在成长中，当前还不支持超链接以及处理 Telegram 的 `media_group`。这需要在 Cloudflare 中巧妙地缓存历史，相信不久之后，Nyaruko 将学会这项新技能！🎓
+同上，通过 `/sync_twitter` 命令，Nyaruko 可以将 Telegram 中的信息同步到 Twitter 上。
 
 详情请看 [这里](https://github.com/niracler/nyaruko-telegram-bot/pull/2), 有更完整的例子。
 
@@ -19,8 +27,8 @@
 
 ### 所有功能列表
 
-- `/sync_twitter` - 将 Telegram 信息同步到 Twitter 上。
 - `/sync_xlog` - 将 Telegram 信息同步到 xLog 上，以 Shorts 的形式。(暂不支持同步 POST)
+- `/sync_twitter` - 将 Telegram 信息同步到 Twitter 上。
 - `/ping` - 测试机器人是否在线。
 - `/getchatid` - 获取当前对话的 ID。
 - `/getuserid` - 获取当前用户的 ID。
@@ -38,29 +46,28 @@ Nyaruko 的能力正在不断进化中，未来将会有更多激动人心的功
 2. 配置必要的环境变量，使用 `wrangler secret` 命令来设置它们。
 3. 部署 Nyaruko 机器人到 Cloudflare Workers。
 
-### 必要的环境变量
+### 克隆并进入项目目录
+
+```bash
+git clone https://github.com/niracler/nyaruko-telegram-bot && cd nyaruko-telegram-bot
+```
+
+### 环境变量
 
 Nyaruko 需要以下环境变量的支持来发挥其作用：
 
-设置在 wrangler.yml 中的环境变量：
-
-- `ALLOWED_USER_IDS`：允许使用机器人的用户 ID 列表，以逗号分隔。
-- `TELEGRAM_BOT_USERNAME`：您的 Telegram 机器人密钥。
-
-使用 `wrangler secret` 命令设置的环境变量：
-
-- `TELEGRAM_BOT_SECRET`：您的 Telegram 机器人密钥。
-- `TWITTER_API_KEY`：您的 Twitter API 密钥。
-- `TWITTER_API_SECRET`：您的 Twitter API 密钥密文。
-- `TWITTER_ACCESS_TOKEN`：Twitter 的访问令牌。
-- `TWITTER_ACCESS_TOKEN_SECRET`：Twitter 的访问令牌密文。
-- `XLOG_TOKEN`：xLog 的 token。
-- `XLOG_CHARACTER_ID`：xLog 的 characterId。
-- `OPENAI_API_KEY`：OpenAI 的 API 密钥。
-
-[点击这里](https://developer.twitter.com/en/portal/dashboard) 来获取 Twitter 相关的 token。
-
-[点击这里](https://core.telegram.org/bots#6-botfather) 可以了解更多关于获取 Telegram Bot Token 的信息。
+|变量名|是否必须|配置方式|描述|
+|---|---|---|---|
+|`ALLOWED_USER_IDS`|是|`wrangler.yml`|允许使用机器人的用户 ID 列表，以逗号分隔|
+|`TELEGRAM_BOT_USERNAME`|否|`wrangler.yml`|您的 Telegram 机器人用户名，用于开启 ai 聊天功能|
+|`TELEGRAM_BOT_SECRET`|是|`secret`|您的 Telegram 机器人密钥（[详情参考](https://core.telegram.org/bots#how-do-i-create-a-bot) |
+|`XLOG_TOKEN`|否|`secret`|xLog 的 token。用于开启 xlog 同步功能|
+|`XLOG_CHARACTER_ID`|否|`secret`|xLog 的 characterId。|
+|`TWITTER_API_KEY`|否|`secret`|您的 Twitter API 密钥([详情参考](https://developer.twitter.com/en/portal/dashboard)), 用于开启 twitter 同步功能|
+|`TWITTER_API_SECRET`|否|`secret`|您的 Twitter API 密钥密文|
+|`TWITTER_ACCESS_TOKEN`|否|`secret`|Twitter 的访问令牌|
+|`TWITTER_ACCESS_TOKEN_SECRET`|否|`secret`|Twitter 的访问令牌密文|
+|`OPENAI_API_KEY`|否|`secret`|OpenAI 的 API 密钥。用于开启 ai 聊天功能|
 
 ### 关于设置环境变量
 
@@ -76,6 +83,37 @@ wrangler secret put TWITTER_API_KEY
 ```
 
 更详细的 wrangler 配置和命令说明，请查阅 [官方 wrangler 文档](https://developers.cloudflare.com/workers/wrangler/commands/) (wrangler 文档感觉要比 twitter 文档好懂得多了，起码事例会多很多～～)。
+
+### 创建 D1 数据库
+
+因为 media_group 的信息是通过 D1 数据库来存储的，所以需要创建一个 D1 数据库
+
+```bash
+wrangler d1 create tg
+```
+
+然后将返回的 D1 数据库的名称填入到 `wrangler.toml` 中，将我配置文件中的 database_id 改成你的 D1 数据库 id
+
+```toml
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "tg"
+database_id = "******"
+```
+
+创建数据库表
+  
+```bash
+wrangler d1 execute tg --file=./schema.sql
+```
+
+### 部署到 cloudflare worker
+
+```bash
+wrangler deploy
+```
+
+届此，Nyaruko 机器人已经部署完成，您可以在 Telegram 上进行测试了。
 
 ## 奈亚子的小秘密
 

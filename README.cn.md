@@ -10,8 +10,6 @@
 
 通过 `/sync_xlog` 命令，Nyaruko 可以将 Telegram 中的信息同步到 xLog Shorts 上。不过呢，Nyaruko 还在成长中，当前还不支持同步 POST。
 
-详情请看 [这里](https://github.com/niracler/nyaruko-telegram-bot/pull/6), 有更完整的例子。
-
 <img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/fbaac6ed-bcf0-4f25-b706-af75fafb71b0">
 
 ### `/sync_twitter` - 将 Telegram 信息同步到 Twitter

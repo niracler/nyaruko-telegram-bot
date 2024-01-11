@@ -12,8 +12,6 @@ Currently, Nyaruko has the following stunning features:
 
 With the `/sync_xlog` command, Nyaruko can synchronize messages from Telegram to xLog as Shorts. This feature is still in development and does not support POST yet. 🚧
 
-for more details, see [here](https://github.com/niracler/nyaruko-telegram-bot/pull/6), there are more complete examples.
-
 <img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/fbaac6ed-bcf0-4f25-b706-af75fafb71b0">
 
 ### `/sync_twitter` - Synchronize Telegram messages to Twitter

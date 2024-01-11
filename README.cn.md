@@ -88,6 +88,8 @@ wrangler secret put TWITTER_API_KEY
 
 因为 media_group 的信息是通过 D1 数据库来存储的，所以需要创建一个 D1 数据库
 
+> 注意⚠️：在奈亚子部署起来之前的多张图的消息，会因为没有在 D1 数据库中找到对应的 media_group_id 而无法同步到 xLog 上。后面会考虑弄一个同步历史消息的脚本
+
 ```bash
 wrangler d1 create tg
 ```

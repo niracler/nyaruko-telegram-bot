@@ -96,6 +96,8 @@ wrangler d1 create tg
 
 Then fill in the name of the D1 database returned into `wrangler.toml`, and change the database_id in my configuration file to your D1 database id.
 
+> Note⚠️: Before Nyaruko is deployed, messages with multiple images will not be synchronized to xLog because the corresponding media_group_id cannot be found in the D1 database. Later, we will consider creating a script to synchronize historical messages.
+
 ```toml
 [[d1_databases]]
 binding = "DB" # i.e. available in your Worker on env.DB

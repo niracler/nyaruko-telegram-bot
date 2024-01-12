@@ -1,4 +1,4 @@
-import { Env, TelegramMessage } from "../type"
+import { Env, TelegramMessage } from "./type"
 
 /**
  * Retrieves the URL list of Telegram photos from a given message.

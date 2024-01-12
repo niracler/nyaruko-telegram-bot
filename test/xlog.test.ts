@@ -1,4 +1,4 @@
-import { Env } from "../src/type";
+import { Env } from "../src/core/type";
 import { uploadMediaToXLog, createShort } from "../src/xlog";
 import { readFileSync } from "fs";
 

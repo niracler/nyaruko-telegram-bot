@@ -1,7 +1,11 @@
 import OpenAI from "openai"
 import { ChatCompletionContentPart, ChatCompletionMessageParam } from 'openai/resources'
-import { getTelegramPhotoUrlList } from './utils'
-import { Env, TelegramUpdate, TelegramMessage } from '../type'
+import { TelegramMessage, TelegramUpdate, Env as CoreEnv } from "../core/type"
+import { getTelegramPhotoUrlList } from "../core/utils"
+
+export type Env = {
+    OPENAI_API_KEY: string
+} & CoreEnv
 
 /**
  * Processes the Ny command by generating a response using OpenAI's chat completion API.
@@ -10,7 +14,7 @@ import { Env, TelegramUpdate, TelegramMessage } from '../type'
  * @param env - The environment object containing the OpenAI API key.
  * @returns A promise that resolves to a string representing the generated response.
  */
-export async function processNyCommand(update: TelegramUpdate, env: Env): Promise<string> {
+export async function processLLM(update: TelegramUpdate, env: Env): Promise<string> {
     if (!update.message?.text && !update.message?.caption) return 'No text found to process.'
 
     try {

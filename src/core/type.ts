@@ -1,16 +1,12 @@
-export interface Env {
+export type Env = {
 	TELEGRAM_BOT_SECRET: string
-	TELEGRAM_BOT_USERNAME: string
-	XLOG_TOKEN: string
-	XLOG_CHARACTER_ID: string
-
-	TWITTER_API_KEY: string
-	TWITTER_API_SECRET: string
-	TWITTER_ACCESS_TOKEN: string
-	TWITTER_ACCESS_TOKEN_SECRET: string
-	OPENAI_API_KEY: string
-	ALLOW_USER_IDS: string[]
 	DB: D1Database
+}
+
+export interface TelegramUpdate {
+	update_id: number      // Update ID from Telegram
+	message: TelegramMessage // Message object, optional
+	// 添加更多的更新相关字段| Add more update related fields
 }
 
 interface TelegramChat {
@@ -47,18 +43,4 @@ export interface TelegramMessage {
 	media_group_id?: string // Media group ID
 	date: number // Unix timestamp
 	// 添加更多的消息相关字段 | Add more message related fields
-}
-
-export interface TelegramUpdate {
-	update_id: number      // Update ID from Telegram
-	message: TelegramMessage // Message object, optional
-	// 添加更多的更新相关字段| Add more update related fields
-}
-
-export interface TwitterResponse {
-	data?: {
-		id: string
-		text: string
-	}
-	errors?: any
 }

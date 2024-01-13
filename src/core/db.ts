@@ -1,4 +1,4 @@
-import { Env, TelegramUpdate } from "../type"
+import { Env, TelegramUpdate } from "./type"
 
 /**
  * Inserts the Telegram update data into the database.

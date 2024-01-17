@@ -1,3 +1,15 @@
+# [0.2.0](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.1.0...v0.2.0) (2024-01-17)
+
+
+### Bug Fixes
+
+* No content found ([3fcb6fe](https://github.com/niracler/nyaruko-telegram-bot/commit/3fcb6fe7e8dd7eb5603a55b6d40ef023f0cc232c))
+
+
+### Features
+
+* sync telegram to xlog shorts ([#6](https://github.com/niracler/nyaruko-telegram-bot/issues/6)) ([67212bb](https://github.com/niracler/nyaruko-telegram-bot/commit/67212bba56ecce5cb4fb392d0d0d429773a74e7d))
+
 # [0.1.0](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.0.1...v0.1.0) (2023-12-20)
 
 
@@ -25,6 +37,3 @@
 * save message ([#2](https://github.com/niracler/nyaruko-telegram-bot/issues/2)) ([4892851](https://github.com/niracler/nyaruko-telegram-bot/commit/4892851e3ccf1cf6b53275d9b07f8d917c6a6d60))
 * sync message from telegram to twitter ([131bcd1](https://github.com/niracler/nyaruko-telegram-bot/commit/131bcd13ba778bfe0182be7924227e4c12b4ad42))
 * sync to twitter ([1892a1f](https://github.com/niracler/nyaruko-telegram-bot/commit/1892a1f2f38a05fe5d68a6d4c68b9792bf3cf32e))
-
-
-

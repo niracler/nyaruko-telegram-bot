@@ -1,9 +1,9 @@
-name: Create Release
+name: Release
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 jobs:
   release:
@@ -11,21 +11,19 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v2
-      
-      # Step to extract the changelog from CHANGELOG.md
-      - name: Get changelog entry
-        run: |
-          VERSION=$(echo $GITHUB_REF | sed 's,.*/\(.*\),\1,')
-          CHANGELOG_CONTENT="$(awk -v version="${VERSION#v}" 'BEGIN { version_tag = "(#+) \\[" version "\\]" } $0 ~ version_tag {print_lines = 1} $0 ~ "^(#+) \\[" && $0 !~ version_tag {print_lines = 0} print_lines' CHANGELOG.md)"
-          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
-          echo "$CHANGELOG_CONTENT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      # Create GitHub Release with changelog content as release description
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          body: ${{ env.CHANGELOG }}
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run semantic-release
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

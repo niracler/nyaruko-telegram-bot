@@ -1,3 +1,10 @@
+## [0.2.1](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.2.0...v0.2.1) (2024-01-18)
+
+
+### Bug Fixes
+
+* error handling in processSyncXLogCommand ([5174655](https://github.com/niracler/nyaruko-telegram-bot/commit/51746558bd79cba1a5dfde5aca22be02da99b948))
+
 # [0.2.0](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.1.0...v0.2.0) (2024-01-17)
 
 

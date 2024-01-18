@@ -41,7 +41,7 @@ export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): 
 
         const response = await createShort(title, content, attachmentUrlList, env)
 
-        if (response.ok === false) {
+        if (response.ok === false || !response.error) {
             return `Failed to post to XLog: ${response}`
         } else {
             // TODO: debug mode
@@ -60,7 +60,7 @@ export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): 
  * @param env - The environment variables.
  * @returns A Promise that resolves to the response from the XLOG system.
  */
-async function createShort(title: string, content: string, attachmentUrlList: string[], env: Env): Promise<any> {
+export async function createShort(title: string, content: string, attachmentUrlList: string[], env: Env): Promise<any> {
     const characterId = env.XLOG_CHARACTER_ID
     const url = `https://indexer.crossbell.io/v1/siwe/contract/characters/${characterId}/notes`
 
@@ -105,7 +105,7 @@ async function createShort(title: string, content: string, attachmentUrlList: st
  * @param env - The environment settings.
  * @returns A promise that resolves to an array of attachment URLs.
  */
-async function uploadPhotosToXLog(photoUrlList: string[], env: Env): Promise<string[]> {
+export async function uploadPhotosToXLog(photoUrlList: string[], env: Env): Promise<string[]> {
     const attachmentUrlList = []
     for (const photoUrl of photoUrlList) {
         const mediaData = await fetch(photoUrl).then(res => res.arrayBuffer())

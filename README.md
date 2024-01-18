@@ -12,7 +12,10 @@ Currently, Nyaruko has the following stunning features:
 
 With the `/sync_xlog` command, Nyaruko can synchronize messages from Telegram to xLog as Shorts. This feature is still in development and does not support POST yet. 🚧
 
-<img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/fbaac6ed-bcf0-4f25-b706-af75fafb71b0">
+<div align=center>
+	<img height="350" alt="image" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/db2249d7-9b5e-4cc7-9544-0a48bc9c402c">
+	<img height="350" alt="image" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/cd6260de-cbba-460d-b2d1-08b462c91b4b">
+</div>
 
 ### `/sync_twitter` - Synchronize Telegram messages to Twitter
 
@@ -21,8 +24,8 @@ With the `/sync_twitter` command, Nyaruko can synchronize messages from Telegram
 for more details, see [here](https://github.com/niracler/nyaruko-telegram-bot/pull/2), there are more complete examples.
 
 <div align=center>
-  <img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/a557d8c6-f75a-4712-9c24-cea244668acf">
-  <img width="400" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/da45b9dc-9d18-4f15-b6d1-a7ba2b10c74b">
+  <img height="280" alt="image" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/a557d8c6-f75a-4712-9c24-cea244668acf">
+  <img height="280" alt="image" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/da45b9dc-9d18-4f15-b6d1-a7ba2b10c74b">
 </div>
 
 ### All Features list

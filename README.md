@@ -24,8 +24,8 @@ With the `/sync_twitter` command, Nyaruko can synchronize messages from Telegram
 for more details, see [here](https://github.com/niracler/nyaruko-telegram-bot/pull/2), there are more complete examples.
 
 <div align=center>
-  <img height="280" alt="image" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/a557d8c6-f75a-4712-9c24-cea244668acf">
-  <img height="280" alt="image" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/da45b9dc-9d18-4f15-b6d1-a7ba2b10c74b">
+  <img height="240" alt="image" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/a557d8c6-f75a-4712-9c24-cea244668acf">
+  <img height="240" alt="image" src="https://github.com/niracler/nyaruko-telegram-bot/assets/24842631/da45b9dc-9d18-4f15-b6d1-a7ba2b10c74b">
 </div>
 
 ### All Features list

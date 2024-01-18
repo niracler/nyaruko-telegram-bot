@@ -41,8 +41,8 @@ export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): 
 
         const response = await createShort(title, content, attachmentUrlList, env)
 
-        if (response.ok === false || !response.error) {
-            return `Failed to post to XLog: ${response}`
+        if (!response.data ) {
+            return `Failed to post to XLog: ${JSON.stringify(response)}`
         } else {
             // TODO: debug mode
             return `Your message has been posted to XLog. data: ${JSON.stringify(response.data)}` //, metadata: ${JSON.stringify(attachmentUrlList)}, response: ${JSON.stringify(photoUrlList)}`

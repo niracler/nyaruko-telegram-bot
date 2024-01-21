@@ -1,3 +1,10 @@
+## [0.2.2](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.2.1...v0.2.2) (2024-01-21)
+
+
+### Bug Fixes
+
+* create table sql ([3d13e9d](https://github.com/niracler/nyaruko-telegram-bot/commit/3d13e9d92cb28d4fc5848f4563fcb727df555f5d))
+
 ## [0.2.1](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.2.0...v0.2.1) (2024-01-18)
 
 

@@ -1,5 +1,5 @@
 -- DROP TABLE IF EXISTS telegram_messages;
-CREATE TABLE IF NOT EXISTS telegram_messages (
+CREATE TABLE telegram_messages (
     update_id INTEGER PRIMARY KEY,
     message_id INTEGER,
     user_id INTEGER,

@@ -1,5 +1,5 @@
 ---
-score: 60
+score: 70
 ---
 
 # 简单易懂的 TG to xLog Shorts 机器人部署方案 - v1

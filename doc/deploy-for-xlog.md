@@ -99,10 +99,10 @@ JSON.parse(localStorage.getItem('connect-kit:account')).state.wallet.characterId
 
 ### 克隆并进入项目目录
 
-嗯，就是这样，很简单的一步。在终端运行如下命令，克隆 -> 进入项目目录 -> 安装依赖。（为了保证这个教程的可用性，我克隆时指定了具体的 v0.2.1 版本）
+嗯，就是这样，很简单的一步。在终端运行如下命令，克隆 -> 进入项目目录 -> 安装依赖。（为了保证这个教程的可用性，我克隆时指定了具体的 v0.2.3 版本）
 
 ```bash
-git clone https://github.com/niracler/nyaruko-telegram-bot -b "v0.2.2" 
+git clone https://github.com/niracler/nyaruko-telegram-bot -b "v0.2.3" 
 cd nyaruko-telegram-bot
 npm install
 ```

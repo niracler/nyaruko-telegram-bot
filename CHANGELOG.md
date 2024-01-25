@@ -1,3 +1,10 @@
+## [0.2.3](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.2.2...v0.2.3) (2024-01-21)
+
+
+### Bug Fixes
+
+* uncomment drop statement sql in d1 schema ([#13](https://github.com/niracler/nyaruko-telegram-bot/issues/13)) ([43753d4](https://github.com/niracler/nyaruko-telegram-bot/commit/43753d45d5cdf34d562249c42f8f2d5e61d5a201))
+
 ## [0.2.2](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.2.1...v0.2.2) (2024-01-21)
 
 

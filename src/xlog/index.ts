@@ -36,12 +36,17 @@ export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): 
         const photoUrlList = await getTelegramPhotoUrlList(update.message.reply_to_message, env)
         const attachmentUrlList = await uploadPhotosToXLog(photoUrlList, env)
         // first line is title, rest is content
-        const title = content.split('\n')[0] || 'Untitled'
-        content = content.slice(title.length + 1)
+        let title
+        if (update.message.quote && update.message.quote.is_manual) {
+            title = update.message.quote.text
+        } else {
+            title = content.split('\n')[0] || 'Untitled'
+            content = content.slice(title.length + 1)
+        }
 
         const response = await createShort(title, content, attachmentUrlList, env)
 
-        if (!response.data ) {
+        if (!response.data) {
             return `Failed to post to XLog: ${JSON.stringify(response)}`
         } else {
             // TODO: debug mode

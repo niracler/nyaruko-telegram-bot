@@ -21,7 +21,7 @@
     "@types/node": "^20.10.0",
     "semantic-release": "^23.0.0",
     "typescript": "^5.3.3",
-    "wrangler": "^3.22.1"
+    "wrangler": "^3.25.0"
   },
   "dependencies": {
     "crossbell": "^1.11.2",

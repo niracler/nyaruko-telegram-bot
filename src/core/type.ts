@@ -41,6 +41,10 @@ export interface TelegramMessage {
 	forward_from_chat?: TelegramChat // Forwarded from chat object, optional
 	forward_from_message_id?: number // Forwarded from message ID, optional
 	media_group_id?: string // Media group ID
+	quote?: {
+		text: string
+		is_manual?: boolean
+	}
 	date: number // Unix timestamp
 	// 添加更多的消息相关字段 | Add more message related fields
 }

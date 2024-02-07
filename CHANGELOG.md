@@ -1,3 +1,15 @@
+# [0.3.0](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.2.3...v0.3.0) (2024-02-07)
+
+
+### Bug Fixes
+
+* no bot username config ([#15](https://github.com/niracler/nyaruko-telegram-bot/issues/15)) ([3ec7f55](https://github.com/niracler/nyaruko-telegram-bot/commit/3ec7f55e6608cb5b336bfd5cbb2a8bdedeb6d0ec))
+
+
+### Features
+
+* use quote text as xLog Shorts title ([f1ab137](https://github.com/niracler/nyaruko-telegram-bot/commit/f1ab1377fa863b0e1d9f597e4c939c4fb43c8157))
+
 ## [0.2.3](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.2.2...v0.2.3) (2024-01-21)
 
 

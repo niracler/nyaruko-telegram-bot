@@ -24,7 +24,7 @@ async function handler(update: TelegramUpdate, env: Env): Promise<string | undef
     } else if (content.startsWith('/ping')) {
         return await processPingCommand(update, env)
 
-    //
+    // TODO: when reply the bot message, even if no mentioning, it will still trigger the bot
     } else if (env.TELEGRAM_BOT_USERNAME && (content.includes(`@${env.TELEGRAM_BOT_USERNAME}`) ) && !content.startsWith('/')) {
         return await processLLM(update, env)
 

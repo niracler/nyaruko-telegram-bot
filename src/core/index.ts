@@ -9,7 +9,6 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env, han
 
     try {
         await syncToDatabase(update, env)
-
         replyText = await handler()
         if (!replyText) return // No reply text, do nothing
     } catch (error) {
@@ -17,6 +16,15 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env, han
     }
 
     await sendReplyToTelegram(update.message.chat.id, replyText, update.message.message_id, env)
+
+    try {
+        const content = update.message?.text || ''
+        if (content.startsWith('/')) {
+            await deleteCommand(update.message.chat.id, update.message.message_id, env)
+        }
+    } catch (error) {
+        await sendReplyToTelegram(update.message.chat.id, `Failed to delete command: ${error}`, update.message.message_id, env)
+    }
 }
 
 // Process the '/getgroupid' command
@@ -39,6 +47,22 @@ export async function processPingCommand(update: TelegramUpdate, env: Env): Prom
 async function processDebugCommand(update: TelegramUpdate, env: Env): Promise<string> {
     // Show more information about this update
     return JSON.stringify(update, null, 2)
+}
+
+// Delete the message that triggered the command
+async function deleteCommand(chatId: number, messageId: number, env: Env): Promise<void> {
+    const response = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_SECRET}/deleteMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            chat_id: chatId,
+            message_id: messageId,
+        }),
+    })
+
+    if (!response.ok) {
+        throw new Error(`Telegram API deleteMessage responded with status ${response.status} and body ${await response.text()}`)
+    }
 }
 
 // Send a message back to Telegram chat

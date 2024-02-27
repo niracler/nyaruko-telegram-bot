@@ -9,6 +9,7 @@ export type Env = {
     TWITTER_API_SECRET: string
     TWITTER_ACCESS_TOKEN: string
     TWITTER_ACCESS_TOKEN_SECRET: string
+    TWITTER_USER_ID: string
     ALLOW_USER_IDS: string[]
 } & CoreEnv
 
@@ -43,21 +44,23 @@ export async function processSyncTwitterCommand(update: TelegramUpdate, env: Env
         const photoUrlList = await getTelegramPhotoUrlList(update.message.reply_to_message, env)
         const tweetMediaIds = await uploadPhotosToTwitter(photoUrlList, env)
 
-        let tweetContent = update.message.reply_to_message.caption || update.message.reply_to_message.text
-        if (!tweetContent) {
-            return `No content found to sync with Twitter. ${JSON.stringify(update.message.reply_to_message)}}`
-        }
+        let tweetContent = update.message.reply_to_message.caption || update.message.reply_to_message.text || ''
 
         tweetContent = `${tweetContent} #from_telegram`
         const tweets = await postTweets(tweetContent, tweetMediaIds, env)
 
         let replyText = ''
+        let urlList = ''
         for (const tweet of tweets) {
             if (!tweet.data?.id) {
                 replyText += `Failed to post tweet: ${JSON.stringify(tweet)}` + '\n'
             } else {
-                replyText = `Your message has been posted to Twitter. Id: ${tweet.data.id}` + '\n' + replyText
+                urlList = `\nhttps://fxtwitter.com/${env.TWITTER_USER_ID}/status/${tweet.data.id}` + urlList
             }
+        }
+
+        if (urlList) {
+            replyText += `Your message has been posted to Twitter:\n ${urlList}`
         }
 
         return replyText

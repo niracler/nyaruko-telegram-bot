@@ -24,7 +24,8 @@ async function handler(update: TelegramUpdate, env: Env): Promise<string | undef
     } else if (content.startsWith('/ping')) {
         return await processPingCommand(update, env)
 
-    } else if (env.TELEGRAM_BOT_USERNAME && content.includes(`@${env.TELEGRAM_BOT_USERNAME}`) && !content.startsWith('/')) {
+    //
+    } else if (env.TELEGRAM_BOT_USERNAME && (content.includes(`@${env.TELEGRAM_BOT_USERNAME}`) ) && !content.startsWith('/')) {
         return await processLLM(update, env)
 
     } else if (content.startsWith('/sync_twitter')) {

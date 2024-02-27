@@ -6,6 +6,7 @@ compatibility_flags = [ "nodejs_compat" ]
 [vars]
 ALLOW_USER_IDS = [ ]
 TELEGRAM_BOT_USERNAME = 'YOUR_BOT_USERNAME'
+TWITTER_USER_ID = 'YOUR_TWIITER_USER_ID'
 
 [[d1_databases]]
 binding = "DB" # i.e. available in your Worker on env.DB

@@ -19,15 +19,15 @@
     "@semantic-release/release-notes-generator": "^12.1.0",
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^20.11.14",
-    "semantic-release": "^23.0.2",
+    "semantic-release": "^23.0.0",
     "typescript": "^5.3.3",
-    "wrangler": "^3.26.0"
+    "wrangler": "^3.30.1"
   },
   "dependencies": {
-    "crossbell": "^1.11.3",
+    "crossbell": "^1.11.6",
     "crypto-js": "^4.2.0",
     "oauth-1.0a": "^2.2.6",
-    "openai": "^4.26.0",
+    "openai": "^4.28.4",
     "telegramify-markdown": "git+ssh://git@github.com/niracler/telegramify-markdown.git#master"
   }
 }

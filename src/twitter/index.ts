@@ -14,11 +14,11 @@ export type Env = {
 } & CoreEnv
 
 interface TwitterResponse {
-	data?: {
-		id: string
-		text: string
-	}
-	errors?: any
+    data?: {
+        id: string
+        text: string
+    }
+    errors?: any
 }
 
 /**
@@ -43,6 +43,7 @@ export async function processSyncTwitterCommand(update: TelegramUpdate, env: Env
     try {
         const photoUrlList = await getTelegramPhotoUrlList(update.message.reply_to_message, env)
         const tweetMediaIds = await uploadPhotosToTwitter(photoUrlList, env)
+        return JSON.stringify([tweetMediaIds, photoUrlList])
 
         let tweetContent = update.message.reply_to_message.caption || update.message.reply_to_message.text || ''
 
@@ -121,7 +122,7 @@ async function uploadPhotosToTwitter(photoUrlList: string[], env: Env): Promise<
     for (const photoUrl of photoUrlList) {
         const mediaData = await fetch(photoUrl).then(res => res.arrayBuffer())
         const media = await uploadMediaToTwitter(mediaData, env)
-        tweetMediaIds.push(media.media_id_string)
+        tweetMediaIds.push(media)
     }
     return tweetMediaIds
 }

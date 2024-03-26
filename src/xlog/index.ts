@@ -30,7 +30,7 @@ export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): 
     }
 
     let content = update.message.reply_to_message.text || update.message.reply_to_message.caption || ''
-    content = `${content}\n#from_telegram`
+    content = `${content}`
 
     try {
         const photoUrlList = await getTelegramPhotoUrlList(update.message.reply_to_message, env)

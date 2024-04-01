@@ -27,7 +27,7 @@
     "crossbell": "^1.11.6",
     "crypto-js": "^4.2.0",
     "oauth-1.0a": "^2.2.6",
-    "openai": "^4.28.4",
+    "openai": "^4.31.0",
     "telegramify-markdown": "git+ssh://git@github.com/niracler/telegramify-markdown.git#master"
   }
 }

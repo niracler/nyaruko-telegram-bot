@@ -1,7 +1,7 @@
 import { handleTelegramUpdate, processGetGroupIdCommand, processGetUserIdCommand, processPingCommand } from './core'
 import { processLLM } from './llm'
 import { processSyncXLogCommand } from './xlog'
-import { processSyncTwitterCommand } from './twitter'
+import twitter from './twitter'
 import { processChannel } from './channel'
 
 import { TelegramUpdate } from './core/type'
@@ -30,7 +30,7 @@ async function handler(update: TelegramUpdate, env: Env): Promise<string | undef
         return await processLLM(update, env)
 
     } else if (content.startsWith('/sync_twitter')) {
-        return await processSyncTwitterCommand(update, env)
+        return await twitter.processSyncTwitterCommand(update, env)
 
     } else if (content.startsWith('/search')) {
         return await processChannel(update, env)

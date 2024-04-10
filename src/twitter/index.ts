@@ -1,8 +1,8 @@
 import OAuth from 'oauth-1.0a'
 import { HmacSHA1, enc } from 'crypto-js'
 import { Buffer } from 'node:buffer'
-import { Env as CoreEnv, TelegramUpdate } from "../core/type"
-import { getTelegramPhotoUrlList } from '../core/utils'
+import { Env as CoreEnv, TelegramUpdate } from "@/core/type"
+import { getTelegramPhotoUrlList } from '@/core/utils'
 
 export type Env = {
     TWITTER_API_KEY: string
@@ -28,7 +28,7 @@ interface TwitterResponse {
  * @param env - The environment variables.
  * @returns A promise that resolves to a string indicating the result of the sync operation.
  */
-export async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Promise<string> {
+async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Promise<string> {
     const allowedUserList = env.ALLOW_USER_IDS
     const fromUserId = update.message?.from?.id.toString() || ''
     const fromUsername = update.message?.from?.username || ''
@@ -133,7 +133,7 @@ async function uploadPhotosToTwitter(photoUrlList: string[], env: Env): Promise<
  * @param env The environment variables.
  * @returns The response from the Twitter API.
  */
-export async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Promise<any> {
+async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Promise<any> {
     const oauth = new OAuth({
         consumer: { key: env.TWITTER_API_KEY, secret: env.TWITTER_API_SECRET },
         signature_method: 'HMAC-SHA1',
@@ -176,7 +176,7 @@ export async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Pr
  * @param env - The environment variables containing the Twitter API credentials.
  * @returns A Promise that resolves to the response from the Twitter API.
  */
-export async function postTweet(text: string, mediaList: string[], replyId: string | undefined, env: Env): Promise<any> {
+async function postTweet(text: string, mediaList: string[], replyId: string | undefined, env: Env): Promise<any> {
     const oauth = new OAuth({
         consumer: { key: env.TWITTER_API_KEY, secret: env.TWITTER_API_SECRET },
         signature_method: 'HMAC-SHA1',
@@ -211,4 +211,9 @@ export async function postTweet(text: string, mediaList: string[], replyId: stri
     })
 
     return await response.json()
+}
+
+export default {
+    processSyncTwitterCommand,
+    uploadPhotosToTwitter
 }

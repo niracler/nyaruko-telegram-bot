@@ -144,7 +144,7 @@ Find botfather, then enter `/setcommands`, then select your bot, and then enter 
 
 ```bash
 sync_twitter - Sync msg to Twitter.
-sync_xlog - Sync msg to Twitter.
+sync_xlog - Sync msg to XLog.
 ping - Test if the bot is online.
 getchatid - Get the ID of the current chat.
 getuserid - Get the ID of the current user.

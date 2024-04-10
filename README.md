@@ -143,6 +143,7 @@ Now, Nyaruko is ready to use! 🎉
 Find botfather, then enter `/setcommands`, then select your bot, and then enter the following content:
 
 ```bash
+search - Search for messages in the chat.
 sync_twitter - Sync msg to Twitter.
 sync_xlog - Sync msg to XLog.
 ping - Test if the bot is online.

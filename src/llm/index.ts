@@ -1,7 +1,7 @@
 import OpenAI from "openai"
 import { ChatCompletionContentPart, ChatCompletionMessageParam } from 'openai/resources'
-import { TelegramMessage, TelegramUpdate, Env as CoreEnv } from "../core/type"
-import { getTelegramPhotoUrlList } from "../core/utils"
+import { TelegramMessage, TelegramUpdate, Env as CoreEnv } from "@/core/type"
+import { getTelegramPhotoUrlList } from "@/core/utils"
 
 export type Env = {
     OPENAI_API_KEY: string
@@ -15,7 +15,13 @@ export type Env = {
  * @returns A promise that resolves to a string representing the generated response.
  */
 export async function processLLM(update: TelegramUpdate, env: Env): Promise<string> {
-    if (!update.message?.text && !update.message?.caption) return 'No text found to process.'
+    const content = update.message?.text || update.message?.caption || ''
+    const replyName = update.message?.reply_to_message?.from.username || ''
+    console.log(`content: ${content}, replyName: ${JSON.stringify(update.message)}`)
+
+    if (!content.includes(`@${env.TELEGRAM_BOT_USERNAME}`) && replyName !== env.TELEGRAM_BOT_USERNAME) {
+        return ''
+    }
 
     try {
         const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
@@ -40,7 +46,15 @@ export async function processLLM(update: TelegramUpdate, env: Env): Promise<stri
             model = "gpt-4-vision-preview"
             maxTokens = 4096
         } else {
-            model = "gpt-4-1106-preview"
+            // TODO: make a function to check if user is allowed to use the model
+            const allowedUserList = env.ALLOW_USER_IDS
+            const fromUserId = update.message?.from?.id.toString() || ''
+            const fromUsername = update.message?.from?.username || ''
+            if (!allowedUserList.includes(fromUsername) && !allowedUserList.includes(fromUserId)) {
+                model = "gpt-3.5-turbo"
+            } else {
+                model = "gpt-4-1106-preview"
+            }            
         }
 
         const completion = await openai.chat.completions.create({

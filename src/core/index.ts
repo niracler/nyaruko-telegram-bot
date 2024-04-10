@@ -29,12 +29,18 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env, han
 
 // Process the '/getgroupid' command
 export async function processGetGroupIdCommand(update: TelegramUpdate, env: Env): Promise<string> {
-    return `Your chat ID is ${update.message?.chat.id}`
+    const fromUsername = update.message?.from?.username || ''
+    const formFirstName = update.message?.from?.first_name || ''
+    const replyName = fromUsername ? `@${fromUsername}` : formFirstName
+    return `哟呼～记下来啦！${replyName} 的聊天 ID 是 \`${update.message?.chat.id}\` 呢~ (｡•̀ᴗ-)✧ `
 }
 
 // Process the '/getuserid' command
 export async function processGetUserIdCommand(update: TelegramUpdate, env: Env): Promise<string> {
-    return `Your user ID is ${update.message?.from?.id}`
+    const fromUsername = update.message?.from?.username || ''
+    const formFirstName = update.message?.from?.first_name || ''
+    const replyName = fromUsername ? `@${fromUsername}` : formFirstName
+    return `呀～ ${replyName} ，您的用户 ID 是 \`${update.message?.from?.id}\` 哦！ヽ(＾Д＾)ﾉ`
 }
 
 // Process the '/ping' command
@@ -67,6 +73,7 @@ async function deleteCommand(chatId: number, messageId: number, env: Env): Promi
 
 // Send a message back to Telegram chat
 async function sendReplyToTelegram(chatId: number, text: string, messageId: number, env: Env) {
+    if (!text) return
     const response = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_SECRET}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

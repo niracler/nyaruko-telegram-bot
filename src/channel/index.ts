@@ -1,4 +1,4 @@
-import { Env as CoreEnv, TelegramUpdate } from "../core/type"
+import { Env as CoreEnv, TelegramUpdate } from "@/core/type"
 
 export type Env = {} & CoreEnv
 

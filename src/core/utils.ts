@@ -1,5 +1,7 @@
 import { Env, TelegramMessage } from "./type"
 
+
+
 /**
  * Retrieves the URL list of Telegram photos from a given message.
  * If the message belongs to a media group, it retrieves the photos from all messages in the group.

@@ -3,6 +3,7 @@ import telegramifyMarkdown from "telegramify-markdown"
 import { Env, TelegramUpdate } from "./type"
 import { syncToDatabase } from "./db"
 
+
 // Process the Telegram update received
 export async function handleTelegramUpdate(update: TelegramUpdate, env: Env, handler: () => Promise<string | undefined>) {
     let replyText: string | undefined

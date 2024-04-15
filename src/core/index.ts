@@ -32,7 +32,14 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env, han
 export async function processGetGroupIdCommand(update: TelegramUpdate, env: Env): Promise<string> {
     const fromUsername = update.message?.from?.username || ''
     const formFirstName = update.message?.from?.first_name || ''
-    const replyName = fromUsername ? `@${fromUsername}` : formFirstName
+    let replyName = fromUsername ? `@${fromUsername}` : formFirstName
+
+    if ( replyName === "@GroupAnonymousBot") {
+        const username = update.message?.sender_chat?.username || ''
+        const title = update.message?.sender_chat?.title || ''
+        replyName = username ? `@${username}` : title
+    }
+
     return `哟呼～记下来啦！${replyName} 的聊天 ID 是 \`${update.message?.chat.id}\` 呢~ (｡•̀ᴗ-)✧ `
 }
 
@@ -40,8 +47,19 @@ export async function processGetGroupIdCommand(update: TelegramUpdate, env: Env)
 export async function processGetUserIdCommand(update: TelegramUpdate, env: Env): Promise<string> {
     const fromUsername = update.message?.from?.username || ''
     const formFirstName = update.message?.from?.first_name || ''
-    const replyName = fromUsername ? `@${fromUsername}` : formFirstName
-    return `呀～ ${replyName} ，您的用户 ID 是 \`${update.message?.from?.id}\` 哦！ヽ(＾Д＾)ﾉ`
+    let replyName = fromUsername ? `@${fromUsername}` : formFirstName
+    let id = update.message?.from?.id
+
+    console.log(`hi ${replyName}`)
+
+    if ( replyName === "@GroupAnonymousBot") {
+        const username = update.message?.sender_chat?.username || ''
+        const title = update.message?.sender_chat?.title || ''
+        replyName = username ? `@${username}` : title
+        id = update.message?.sender_chat?.id.toString() || ''
+    }
+
+    return `呀～ ${replyName} ，您的 ID 是 \`${id}\` 哦！ヽ(＾Д＾)ﾉ`
 }
 
 // Process the '/ping' command

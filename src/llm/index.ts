@@ -20,7 +20,11 @@ export async function processLLM(update: TelegramUpdate, env: Env): Promise<stri
     console.log(`content: ${content}, replyName: ${JSON.stringify(update.message)}`)
 
     if (!content.includes(`@${env.TELEGRAM_BOT_USERNAME}`) && replyName !== env.TELEGRAM_BOT_USERNAME) {
-        return ''
+        // if (content.includes(`#TIL`)) {
+            
+        // } else {
+            return ''
+        // }
     }
 
     try {
@@ -39,6 +43,13 @@ export async function processLLM(update: TelegramUpdate, env: Env): Promise<stri
                 content: await messageToContentPart(update.message, env)
             }
         ]
+
+        // if (content.includes(`#TIL`)) {
+        //     messageParamList.push({
+        //         role: "user",
+        //         content: "你觉得上面这段内容，我哪里写的不妥，是否有需要补充说明的地方？"
+        //     })
+        // }
 
         let model
         let maxTokens

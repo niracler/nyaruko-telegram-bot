@@ -19,7 +19,7 @@
     "@semantic-release/release-notes-generator": "^13.0.0",
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^20.12.6",
-    "semantic-release": "^23.0.7",
+    "semantic-release": "^23.0.8",
     "typescript": "^5.3.3",
     "wrangler": "^3.30.1"
   },

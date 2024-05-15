@@ -1,16 +1,15 @@
 import { handleTelegramUpdate, processGetGroupIdCommand, processGetUserIdCommand, processPingCommand } from './core'
 import { processLLM } from './llm'
 import { processSyncXLogCommand } from './xlog'
-import { processSyncTwitterCommand } from './twitter'
+import twitter from './twitter'
+import { processChannel } from './channel'
 
 import { TelegramUpdate } from './core/type'
 import { Env as LLMEnv } from './llm'
 import { Env as XLogEnv } from './xlog'
 import { Env as TwitterEnv } from './twitter'
 
-export type Env = {
-    TELEGRAM_BOT_USERNAME: string
-} & LLMEnv & XLogEnv & TwitterEnv
+export type Env = LLMEnv & XLogEnv & TwitterEnv
 
 async function handler(update: TelegramUpdate, env: Env): Promise<string | undefined> {
     const content = update.message?.text || update.message?.caption || ''
@@ -24,18 +23,17 @@ async function handler(update: TelegramUpdate, env: Env): Promise<string | undef
     } else if (content.startsWith('/ping')) {
         return await processPingCommand(update, env)
 
-    // TODO: when reply the bot message, even if no mentioning, it will still trigger the bot
-    } else if (env.TELEGRAM_BOT_USERNAME && (content.includes(`@${env.TELEGRAM_BOT_USERNAME}`) ) && !content.startsWith('/')) {
-        return await processLLM(update, env)
-
     } else if (content.startsWith('/sync_twitter')) {
-        return await processSyncTwitterCommand(update, env)
+        return await twitter.processSyncTwitterCommand(update, env)
+
+    } else if (content.startsWith('/search')) {
+        return await processChannel(update, env)
 
     } else if (content.startsWith('/sync_xlog')) {
         return await processSyncXLogCommand(update, env)
 
     } else {
-        return undefined
+        return await processLLM(update, env)
     }
 }
 

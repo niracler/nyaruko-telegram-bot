@@ -1,8 +1,8 @@
 import OAuth from 'oauth-1.0a'
 import { HmacSHA1, enc } from 'crypto-js'
 import { Buffer } from 'node:buffer'
-import { Env as CoreEnv, TelegramUpdate } from "../core/type"
-import { getTelegramPhotoUrlList } from '../core/utils'
+import { Env as CoreEnv, TelegramUpdate } from "@/core/type"
+import { getTelegramPhotoUrlList } from '@/core/utils'
 
 export type Env = {
     TWITTER_API_KEY: string
@@ -14,11 +14,11 @@ export type Env = {
 } & CoreEnv
 
 interface TwitterResponse {
-	data?: {
-		id: string
-		text: string
-	}
-	errors?: any
+    data?: {
+        id: string
+        text: string
+    }
+    errors?: any
 }
 
 /**
@@ -28,10 +28,21 @@ interface TwitterResponse {
  * @param env - The environment variables.
  * @returns A promise that resolves to a string indicating the result of the sync operation.
  */
-export async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Promise<string> {
+async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Promise<string> {
     const allowedUserList = env.ALLOW_USER_IDS
-    const fromUserId = update.message?.from?.id.toString() || ''
-    const fromUsername = update.message?.from?.username || ''
+    let fromUserId = update.message?.from?.id.toString() || ''
+    let fromUsername = update.message?.from?.username || ''
+    let formFirstName = update.message?.from?.first_name || ''
+    let replyName = fromUsername ? `@${fromUsername}` : formFirstName
+
+    if ( replyName === "@GroupAnonymousBot") {
+        const username = update.message?.sender_chat?.username || ''
+        const title = update.message?.sender_chat?.title || ''
+        fromUsername = update.message?.sender_chat?.username || ''
+        fromUserId = update.message?.sender_chat?.id.toString() || ''
+        replyName = username ? `@${username}` : title
+    }
+
     if (!allowedUserList.includes(fromUsername) && !allowedUserList.includes(fromUserId)) {
         return 'You are not allowed to sync with Twitter. Please contact manager to get access.'
     }
@@ -121,7 +132,13 @@ async function uploadPhotosToTwitter(photoUrlList: string[], env: Env): Promise<
     for (const photoUrl of photoUrlList) {
         const mediaData = await fetch(photoUrl).then(res => res.arrayBuffer())
         const media = await uploadMediaToTwitter(mediaData, env)
-        tweetMediaIds.push(media.media_id_string)
+        if (media.errors) {
+            console.log("Failed to upload media: ", JSON.stringify(media.errors))
+            throw new Error(`Failed to upload media: ${JSON.stringify(media.errors)}`)
+        }
+
+        console.log(JSON.stringify(media, null, 2))
+        tweetMediaIds.push(media)
     }
     return tweetMediaIds
 }
@@ -132,38 +149,14 @@ async function uploadPhotosToTwitter(photoUrlList: string[], env: Env): Promise<
  * @param env The environment variables.
  * @returns The response from the Twitter API.
  */
-export async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Promise<any> {
-    const oauth = new OAuth({
-        consumer: { key: env.TWITTER_API_KEY, secret: env.TWITTER_API_SECRET },
-        signature_method: 'HMAC-SHA1',
-        hash_function(baseString, key) {
-            return HmacSHA1(baseString, key).toString(enc.Base64)
-        },
-    })
-
-    const oauthToken = {
-        key: env.TWITTER_ACCESS_TOKEN,
-        secret: env.TWITTER_ACCESS_TOKEN_SECRET,
-    }
-
-    const requestData = {
-        url: 'https://upload.twitter.com/1.1/media/upload.json?media_category=tweet_image',
-        method: 'POST',
-        data: {
-            media_data: Buffer.from(mediaData).toString('base64'),
-        },
-    }
-
-    const response = await fetch(requestData.url, {
-        method: 'POST',
-        headers: {
-            ...oauth.toHeader(oauth.authorize(requestData, oauthToken)),
-            'content-type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({ media_data: Buffer.from(mediaData).toString('base64') }),
-    })
-
-    return await response.json()
+async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Promise<any> {
+    return await makeTwitterRequest(
+        'https://upload.X.com/1.1/media/upload.json?media_category=tweet_image',
+        'POST',
+        new URLSearchParams({ media_data: Buffer.from(mediaData).toString('base64') }),
+        'application/x-www-form-urlencoded',
+        env
+    )
 }
 
 /**
@@ -175,7 +168,26 @@ export async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Pr
  * @param env - The environment variables containing the Twitter API credentials.
  * @returns A Promise that resolves to the response from the Twitter API.
  */
-export async function postTweet(text: string, mediaList: string[], replyId: string | undefined, env: Env): Promise<any> {
+async function postTweet(text: string, mediaList: string[], replyId: string | undefined, env: Env): Promise<any> {
+    const msg = {
+        text,
+        reply: replyId ? { in_reply_to_tweet_id: replyId } : undefined,
+        media: mediaList.length > 0 ? { media_ids: mediaList } : undefined,
+    }
+
+    return await makeTwitterRequest('https://api.twitter.com/2/tweets', 'POST', JSON.stringify(msg), 'application/json', env)
+}
+
+/**
+ * Makes a request to the Twitter API.
+ * 
+ * @param url - The URL of the API endpoint.
+ * @param method - The HTTP method of the request.
+ * @param data - The data to be sent in the request body.
+ * @param env - The environment variables containing the Twitter API credentials.
+ * @returns A Promise that resolves to the response from the Twitter API.
+ */
+async function makeTwitterRequest(url: string, method: string, data: any, contentType: string, env: Env): Promise<any> {
     const oauth = new OAuth({
         consumer: { key: env.TWITTER_API_KEY, secret: env.TWITTER_API_SECRET },
         signature_method: 'HMAC-SHA1',
@@ -190,24 +202,25 @@ export async function postTweet(text: string, mediaList: string[], replyId: stri
     }
 
     const requestData = {
-        url: "https://api.twitter.com/2/tweets",
-        method: 'POST',
-    }
-
-    const msg = {
-        text,
-        reply: replyId ? { in_reply_to_tweet_id: replyId } : undefined,
-        media: mediaList.length > 0 ? { media_ids: mediaList } : undefined,
+        url,
+        method,
     }
 
     const response = await fetch(requestData.url, {
-        method: 'POST',
+        method,
         headers: {
             ...oauth.toHeader(oauth.authorize(requestData, oauthToken)),
-            'content-type': "application/json",
+            'Content-Type': contentType,
         },
-        body: JSON.stringify(msg),
+        body: data,
     })
+    console.log(contentType)
+    console.log(JSON.stringify(oauth.toHeader(oauth.authorize(requestData, oauthToken))))
 
     return await response.json()
+}
+
+export default {
+    processSyncTwitterCommand,
+    uploadPhotosToTwitter
 }

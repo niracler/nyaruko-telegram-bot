@@ -8,6 +8,7 @@ import { Env, TelegramUpdate } from "./type"
  * @returns A promise that resolves when the data is successfully inserted into the database.
  */
 export async function syncToDatabase(update: TelegramUpdate, env: Env) {
+    console.log('syncToDatabase', JSON.stringify(update, null, 2))
 
     await env.DB.prepare(`
     INSERT INTO telegram_messages (

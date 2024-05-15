@@ -20,11 +20,7 @@ export async function processLLM(update: TelegramUpdate, env: Env): Promise<stri
     console.log(`content: ${content}, replyName: ${JSON.stringify(update.message)}`)
 
     if (!content.includes(`@${env.TELEGRAM_BOT_USERNAME}`) && replyName !== env.TELEGRAM_BOT_USERNAME) {
-        // if (content.includes(`#TIL`)) {
-            
-        // } else {
-            return ''
-        // }
+        return ''
     }
 
     try {
@@ -44,28 +40,20 @@ export async function processLLM(update: TelegramUpdate, env: Env): Promise<stri
             }
         ]
 
-        // if (content.includes(`#TIL`)) {
-        //     messageParamList.push({
-        //         role: "user",
-        //         content: "你觉得上面这段内容，我哪里写的不妥，是否有需要补充说明的地方？"
-        //     })
-        // }
-
         let model
         let maxTokens
-        if (update.message?.reply_to_message?.photo?.length || update.message?.photo?.length) {
+        const allowedUserList = env.ALLOW_USER_IDS
+        const fromUserId = update.message?.from?.id.toString() || ''
+        const fromUsername = update.message?.from?.username || ''
+        if (allowedUserList.includes(fromUserId) ||
+            allowedUserList.includes(fromUsername)) {
             model = "gpt-4o"
-            maxTokens = 4096
         } else {
+            if (update.message?.reply_to_message?.photo?.length || update.message?.photo?.length) {
+                return "抱歉，不是所有人都能使用图片哦~"
+            }
             // TODO: make a function to check if user is allowed to use the model
-            const allowedUserList = env.ALLOW_USER_IDS
-            const fromUserId = update.message?.from?.id.toString() || ''
-            const fromUsername = update.message?.from?.username || ''
-            if (!allowedUserList.includes(fromUsername) && !allowedUserList.includes(fromUserId)) {
-                model = "gpt-3.5-turbo"
-            } else {
-                model = "gpt-4o"
-            }            
+            model = "gpt-3.5-turbo"
         }
 
         const completion = await openai.chat.completions.create({

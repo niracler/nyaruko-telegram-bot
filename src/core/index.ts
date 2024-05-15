@@ -1,11 +1,13 @@
 
 import telegramifyMarkdown from "telegramify-markdown"
-import { Env, TelegramUpdate } from "./type"
+import { Env } from "./type"
+import { Update } from 'grammy/types'
 import { syncToDatabase } from "./db"
 
 
 // Process the Telegram update received
-export async function handleTelegramUpdate(update: TelegramUpdate, env: Env, handler: () => Promise<string | undefined>) {
+export async function handleTelegramUpdate(update: Update, env: Env, handler: () => Promise<string | undefined>) {
+    if (!update.message) return
     let replyText: string | undefined
 
     try {
@@ -31,7 +33,7 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env, han
 }
 
 // Process the '/getgroupid' command
-export async function processGetGroupIdCommand(update: TelegramUpdate, env: Env): Promise<string> {
+export async function processGetGroupIdCommand(update: Update, env: Env): Promise<string> {
     const fromUsername = update.message?.from?.username || ''
     const formFirstName = update.message?.from?.first_name || ''
     let replyName = fromUsername ? `@${fromUsername}` : formFirstName
@@ -46,7 +48,7 @@ export async function processGetGroupIdCommand(update: TelegramUpdate, env: Env)
 }
 
 // Process the '/getuserid' command
-export async function processGetUserIdCommand(update: TelegramUpdate, env: Env): Promise<string> {
+export async function processGetUserIdCommand(update: Update, env: Env): Promise<string> {
     const fromUsername = update.message?.from?.username || ''
     const formFirstName = update.message?.from?.first_name || ''
     let replyName = fromUsername ? `@${fromUsername}` : formFirstName
@@ -58,20 +60,20 @@ export async function processGetUserIdCommand(update: TelegramUpdate, env: Env):
         const username = update.message?.sender_chat?.username || ''
         const title = update.message?.sender_chat?.title || ''
         replyName = username ? `@${username}` : title
-        id = update.message?.sender_chat?.id.toString() || ''
+        id = update.message?.sender_chat?.id || 0
     }
 
     return `呀～ ${replyName} ，您的 ID 是 \`${id}\` 哦！ヽ(＾Д＾)ﾉ`
 }
 
 // Process the '/ping' command
-export async function processPingCommand(update: TelegramUpdate, env: Env): Promise<string> {
+export async function processPingCommand(update: Update, env: Env): Promise<string> {
     // Show more information about this chat
     return JSON.stringify(update.message?.chat, null, 2)
 }
 
 // Process the '/debug' command
-async function processDebugCommand(update: TelegramUpdate, env: Env): Promise<string> {
+async function processDebugCommand(update: Update, env: Env): Promise<string> {
     // Show more information about this update
     return JSON.stringify(update, null, 2)
 }

@@ -1,8 +1,9 @@
 import OAuth from 'oauth-1.0a'
 import { HmacSHA1, enc } from 'crypto-js'
 import { Buffer } from 'node:buffer'
-import { Env as CoreEnv, TelegramUpdate } from "@/core/type"
+import { Env as CoreEnv } from "@/core/type"
 import { getTelegramPhotoUrlList } from '@/core/utils'
+import { Update } from 'grammy/types'
 
 export type Env = {
     TWITTER_API_KEY: string
@@ -28,7 +29,7 @@ interface TwitterResponse {
  * @param env - The environment variables.
  * @returns A promise that resolves to a string indicating the result of the sync operation.
  */
-async function processSyncTwitterCommand(update: TelegramUpdate, env: Env): Promise<string> {
+async function processSyncTwitterCommand(update: Update, env: Env): Promise<string> {
     const allowedUserList = env.ALLOW_USER_IDS
     let fromUserId = update.message?.from?.id.toString() || ''
     let fromUsername = update.message?.from?.username || ''

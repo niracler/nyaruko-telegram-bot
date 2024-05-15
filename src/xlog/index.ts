@@ -1,6 +1,7 @@
 import { ipfsUploadFile } from "crossbell/ipfs"
-import { Env as CoreEnv, TelegramUpdate } from "@/core/type"
+import { Env as CoreEnv } from "@/core/type"
 import { getTelegramPhotoUrlList } from "@/core/utils"
+import { Update } from "grammy/types"
 
 export type Env = {
     XLOG_TOKEN: string
@@ -14,7 +15,7 @@ export type Env = {
  * @param env - The environment object.
  * @returns A promise that resolves to a string indicating the result of the sync operation.
  */
-export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): Promise<string> {
+export async function processSyncXLogCommand(update: Update, env: Env): Promise<string> {
 
     const allowedUserList = env.ALLOW_USER_IDS
     let fromUserId = update.message?.from?.id.toString() || ''

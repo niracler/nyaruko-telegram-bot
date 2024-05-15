@@ -1,7 +1,8 @@
 import OpenAI from "openai"
 import { ChatCompletionContentPart, ChatCompletionMessageParam } from 'openai/resources'
-import { TelegramMessage, TelegramUpdate, Env as CoreEnv } from "@/core/type"
+import { Env as CoreEnv } from "@/core/type"
 import { getTelegramPhotoUrlList } from "@/core/utils"
+import { Update, Message } from "grammy/types"
 
 export type Env = {
     OPENAI_API_KEY: string
@@ -14,9 +15,10 @@ export type Env = {
  * @param env - The environment object containing the OpenAI API key.
  * @returns A promise that resolves to a string representing the generated response.
  */
-export async function processLLM(update: TelegramUpdate, env: Env): Promise<string> {
+export async function processLLM(update: Update, env: Env): Promise<string> {
+    if (!update.message) return ''
     const content = update.message?.text || update.message?.caption || ''
-    const replyName = update.message?.reply_to_message?.from.username || ''
+    const replyName = update.message?.reply_to_message?.from?.username || ''
     console.log(`content: ${content}, replyName: ${JSON.stringify(update.message)}`)
 
     if (!content.includes(`@${env.TELEGRAM_BOT_USERNAME}`) && replyName !== env.TELEGRAM_BOT_USERNAME) {
@@ -73,7 +75,7 @@ export async function processLLM(update: TelegramUpdate, env: Env): Promise<stri
  * @param env The environment configuration.
  * @returns A promise that resolves to an array of ChatCompletionContentPart objects or a string.
  */
-async function messageToContentPart(message: TelegramMessage | undefined, env: Env): Promise<ChatCompletionContentPart[] | string> {
+async function messageToContentPart(message: Message | undefined, env: Env): Promise<ChatCompletionContentPart[] | string> {
     if (!message) return ""
 
     if (!message.photo?.length) {

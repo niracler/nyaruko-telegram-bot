@@ -1,4 +1,6 @@
-import { Env, TelegramMessage } from "./type"
+import { Env } from "./type"
+import { Message } from "grammy/types"
+
 
 /**
  * Retrieves the URL list of Telegram photos from a given message.
@@ -8,7 +10,7 @@ import { Env, TelegramMessage } from "./type"
  * @param env - The environment object containing necessary configurations.
  * @returns A promise that resolves to an array of photo URLs.
  */
-export async function getTelegramPhotoUrlList(message: TelegramMessage, env: Env): Promise<string[]> {
+export async function getTelegramPhotoUrlList(message: Message, env: Env): Promise<string[]> {
     let photoIdList = []
     if (!message.media_group_id) {
         if (message.photo?.length) {

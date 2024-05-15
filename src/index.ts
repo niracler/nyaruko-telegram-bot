@@ -4,14 +4,14 @@ import { processSyncXLogCommand } from './xlog'
 import twitter from './twitter'
 import { processChannel } from './channel'
 
-import { TelegramUpdate } from './core/type'
 import { Env as LLMEnv } from './llm'
 import { Env as XLogEnv } from './xlog'
 import { Env as TwitterEnv } from './twitter'
+import { Update } from 'grammy/types'
 
 export type Env = LLMEnv & XLogEnv & TwitterEnv
 
-async function handler(update: TelegramUpdate, env: Env): Promise<string | undefined> {
+async function handler(update: Update, env: Env): Promise<string | undefined> {
     const content = update.message?.text || update.message?.caption || ''
 
     if (content.startsWith('/getchatid')) {
@@ -41,7 +41,7 @@ export default {
     async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
         if (request.method === 'POST') {
             try {
-                const update = await request.json() as TelegramUpdate
+                const update = await request.json() as Update
                 await handleTelegramUpdate(update, env, async () => {
                     return await handler(update, env)
                 })

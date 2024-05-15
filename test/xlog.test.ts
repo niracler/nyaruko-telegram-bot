@@ -1,5 +1,5 @@
 import { Env, uploadPhotosToXLog } from "../src/xlog"
-import { createShort } from "../src/xlog";
+import { createShort } from "../src/xlog"
 
 // 本地读取一张图片
 

@@ -8,6 +8,7 @@ export type Env = {
 export interface TelegramUpdate {
     update_id: number      // Update ID from Telegram
     message: TelegramMessage // Message object, optional
+    inline_query: any
     // 添加更多的更新相关字段| Add more update related fields
 }
 

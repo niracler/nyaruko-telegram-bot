@@ -9,7 +9,9 @@ export async function handleTelegramUpdate(update: TelegramUpdate, env: Env, han
     let replyText: string | undefined
 
     try {
-        await syncToDatabase(update, env)
+        if (!update.inline_query) {
+            await syncToDatabase(update, env)
+        }
         replyText = await handler()
         if (!replyText) return // No reply text, do nothing
     } catch (error) {
@@ -34,7 +36,7 @@ export async function processGetGroupIdCommand(update: TelegramUpdate, env: Env)
     const formFirstName = update.message?.from?.first_name || ''
     let replyName = fromUsername ? `@${fromUsername}` : formFirstName
 
-    if ( replyName === "@GroupAnonymousBot") {
+    if (replyName === "@GroupAnonymousBot") {
         const username = update.message?.sender_chat?.username || ''
         const title = update.message?.sender_chat?.title || ''
         replyName = username ? `@${username}` : title
@@ -52,7 +54,7 @@ export async function processGetUserIdCommand(update: TelegramUpdate, env: Env):
 
     console.log(`hi ${replyName}`)
 
-    if ( replyName === "@GroupAnonymousBot") {
+    if (replyName === "@GroupAnonymousBot") {
         const username = update.message?.sender_chat?.username || ''
         const title = update.message?.sender_chat?.title || ''
         replyName = username ? `@${username}` : title
@@ -107,4 +109,37 @@ async function sendReplyToTelegram(chatId: number, text: string, messageId: numb
     if (!response.ok) {
         throw new Error(`Telegram API sendMessage responded with status ${response.status}`)
     }
+}
+
+export async function answerInlineQuery(queryId: number, results: any, nextOffset: string, env: Env) {
+    const response = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_SECRET}/answerInlineQuery`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            inline_query_id: queryId,
+            results,
+            next_offset: nextOffset,
+        }),
+    })
+
+    console.log(`answerInlineQuery response: ${JSON.stringify(await response.json())}, ${JSON.stringify(results[1])}`)
+
+    if (!response.ok) {
+        console.log(`error: ${JSON.stringify(await response.json())}`)
+        throw new Error(`Telegram API answerInlineQuery responded with status ${response.status}`)
+    }
+}
+
+export async function getResultsForQuery(query: string, results: any[], offset: string) {
+    const res = results.filter((result) => {
+        return result.caption.includes(query)
+    })
+
+    return res.slice(parseInt(offset), parseInt(offset) + 10)
+}
+
+// 计算下一个offset
+export function calculateNextOffset(currentOffset: string) {
+    const nextOffset = parseInt(currentOffset) + 10;
+    return nextOffset.toString();
 }

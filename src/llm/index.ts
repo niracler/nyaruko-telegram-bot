@@ -54,7 +54,7 @@ export async function processLLM(update: TelegramUpdate, env: Env): Promise<stri
         let model
         let maxTokens
         if (update.message?.reply_to_message?.photo?.length || update.message?.photo?.length) {
-            model = "gpt-4-vision-preview"
+            model = "gpt-4o"
             maxTokens = 4096
         } else {
             // TODO: make a function to check if user is allowed to use the model
@@ -64,7 +64,7 @@ export async function processLLM(update: TelegramUpdate, env: Env): Promise<stri
             if (!allowedUserList.includes(fromUsername) && !allowedUserList.includes(fromUserId)) {
                 model = "gpt-3.5-turbo"
             } else {
-                model = "gpt-4-1106-preview"
+                model = "gpt-4o"
             }            
         }
 

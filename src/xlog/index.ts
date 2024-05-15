@@ -16,11 +16,19 @@ export type Env = {
  */
 export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): Promise<string> {
 
-    const fromUserId = update.message?.from?.id.toString() || ''
-    const fromUsername = update.message?.from?.username || ''
-    const formFirstName = update.message?.from?.first_name || ''
-    const replyName = fromUsername ? `@${fromUsername}` : formFirstName
     const allowedUserList = env.ALLOW_USER_IDS
+    let fromUserId = update.message?.from?.id.toString() || ''
+    let fromUsername = update.message?.from?.username || ''
+    let formFirstName = update.message?.from?.first_name || ''
+    let replyName = fromUsername ? `@${fromUsername}` : formFirstName
+
+    if ( replyName === "@GroupAnonymousBot") {
+        const username = update.message?.sender_chat?.username || ''
+        const title = update.message?.sender_chat?.title || ''
+        fromUsername = update.message?.sender_chat?.username || ''
+        fromUserId = update.message?.sender_chat?.id.toString() || ''
+        replyName = username ? `@${username}` : title
+    }
 
     if (!allowedUserList.includes(fromUsername) && !allowedUserList.includes(fromUserId)) {
         return `${replyName} 噢呀～看来您还没有变身的魔法呢～ (＞ｍ＜) 为了同步XLog，您需要管理员大人的特别许可哦！快快联系管理员大大，拿到闪闪发光的权限吧～ヾ(｡>﹏<｡)ﾉﾞ✧*。`

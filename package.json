@@ -18,7 +18,7 @@
     "@semantic-release/github": "^10.0.6",
     "@semantic-release/release-notes-generator": "^13.0.0",
     "@types/crypto-js": "^4.2.2",
-    "@types/node": "^20.14.5",
+    "@types/node": "^20.14.9",
     "semantic-release": "^24.0.0",
     "typescript": "^5.4.5",
     "wrangler": "^3.62.0"

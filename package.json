@@ -12,7 +12,7 @@
     "start": "wrangler dev"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240620.0",
+    "@cloudflare/workers-types": "^4.20240712.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^10.0.6",

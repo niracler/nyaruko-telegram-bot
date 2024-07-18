@@ -45,8 +45,20 @@ export async function processLLM(update: Update, env: Env): Promise<string> {
         let model
         let maxTokens
         const allowedUserList = env.ALLOW_USER_IDS
-        const fromUserId = update.message?.from?.id.toString() || ''
-        const fromUsername = update.message?.from?.username || ''
+
+        let fromUserId = update.message?.from?.id.toString() || ''
+        let fromUsername = update.message?.from?.username || ''
+        let formFirstName = update.message?.from?.first_name || ''
+        let replyName = fromUsername ? `@${fromUsername}` : formFirstName
+
+        if (replyName === "@GroupAnonymousBot") {
+            const username = update.message?.sender_chat?.username || ''
+            const title = update.message?.sender_chat?.title || ''
+            fromUsername = update.message?.sender_chat?.username || ''
+            fromUserId = update.message?.sender_chat?.id.toString() || ''
+            replyName = username ? `@${username}` : title
+        }
+
         if (allowedUserList.includes(fromUserId) ||
             allowedUserList.includes(fromUsername)) {
             model = "gpt-4o"

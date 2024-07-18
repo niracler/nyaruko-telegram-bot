@@ -4,7 +4,6 @@ import { Env } from "./type"
 import { Update } from 'grammy/types'
 import { syncToDatabase } from "./db"
 
-
 // Process the Telegram update received
 export async function handleTelegramUpdate(update: Update, env: Env, handler: () => Promise<string | undefined>) {
     if (!update.message) return

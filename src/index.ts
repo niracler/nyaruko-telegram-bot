@@ -7,9 +7,11 @@ import { processChannel } from './channel'
 import { Env as LLMEnv } from './llm'
 import { Env as XLogEnv } from './xlog'
 import { Env as TwitterEnv } from './twitter'
+import { Env as RandomEnv } from './random'
 import { Update } from 'grammy/types'
+import { processRandom } from './random'
 
-export type Env = LLMEnv & XLogEnv & TwitterEnv
+export type Env = LLMEnv & XLogEnv & TwitterEnv & RandomEnv
 
 async function handler(update: Update, env: Env): Promise<string | undefined> {
     const content = update.message?.text || update.message?.caption || ''
@@ -32,6 +34,9 @@ async function handler(update: Update, env: Env): Promise<string | undefined> {
     } else if (content.startsWith('/sync_xlog')) {
         return await processSyncXLogCommand(update, env)
 
+    } else if (update.message?.reply_to_message?.text?.includes('#random_todolist')) {
+        return await processRandom(update, env)
+        
     } else {
         return await processLLM(update, env)
     }

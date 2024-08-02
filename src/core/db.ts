@@ -1,4 +1,5 @@
-import { Env, TelegramUpdate } from "./type"
+import { Env } from "./type"
+import { Update } from 'grammy/types'
 
 /**
  * Inserts the Telegram update data into the database.
@@ -7,7 +8,9 @@ import { Env, TelegramUpdate } from "./type"
  * @param env - The environment object.
  * @returns A promise that resolves when the data is successfully inserted into the database.
  */
-export async function syncToDatabase(update: TelegramUpdate, env: Env) {
+export async function syncToDatabase(update: Update, env: Env) {
+    console.log('syncToDatabase', JSON.stringify(update, null, 2))
+    if (!update.message) return
 
     await env.DB.prepare(`
     INSERT INTO telegram_messages (
@@ -67,10 +70,7 @@ export async function syncToDatabase(update: TelegramUpdate, env: Env) {
         update.message.reply_to_message?.sender_chat?.title || null,
         update.message.reply_to_message?.sender_chat?.type || null,
         update.message.reply_to_message?.date || null,
-        update.message.forward_from_chat?.id || null,
-        update.message.forward_from_chat?.title || null,
-        update.message.forward_from_chat?.type || null,
-        update.message.forward_from_message_id || null,
+        null, null, null, null,
         update.message.media_group_id || null,
         update.message.photo?.length ? update.message.photo[update.message.photo.length - 1].file_id : null,
         update.message.caption || null,

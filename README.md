@@ -70,6 +70,7 @@ Nyaruko requires the following environment variables to function:
 |`TWITTER_API_SECRET`|No|`secret`|Your Twitter API secret key|
 |`TWITTER_ACCESS_TOKEN`|No|`secret`|Twitter access token|
 |`TWITTER_ACCESS_TOKEN_SECRET`|No|`secret`|Twitter access token secret|
+|`TWITTER_USER_ID`|No|`wrangler.yml`|Twitter user id|
 |`OPENAI_API_KEY`|No|`secret`|OpenAI API key. Used to enable AI chat|
 
 ### About Setting Environment Variables
@@ -142,8 +143,9 @@ Now, Nyaruko is ready to use! 🎉
 Find botfather, then enter `/setcommands`, then select your bot, and then enter the following content:
 
 ```bash
+search - Search for messages in the chat.
 sync_twitter - Sync msg to Twitter.
-sync_xlog - Sync msg to Twitter.
+sync_xlog - Sync msg to XLog.
 ping - Test if the bot is online.
 getchatid - Get the ID of the current chat.
 getuserid - Get the ID of the current user.

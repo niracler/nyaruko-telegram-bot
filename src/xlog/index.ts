@@ -1,11 +1,11 @@
 import { ipfsUploadFile } from "crossbell/ipfs"
-import { Env as CoreEnv, TelegramUpdate } from "../core/type"
-import { getTelegramPhotoUrlList } from "../core/utils"
+import { Env as CoreEnv } from "@/core/type"
+import { getTelegramPhotoUrlList } from "@/core/utils"
+import { Update } from "grammy/types"
 
 export type Env = {
     XLOG_TOKEN: string
     XLOG_CHARACTER_ID: string
-    ALLOW_USER_IDS: string[]
 } & CoreEnv
 
 /**
@@ -15,22 +15,32 @@ export type Env = {
  * @param env - The environment object.
  * @returns A promise that resolves to a string indicating the result of the sync operation.
  */
-export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): Promise<string> {
+export async function processSyncXLogCommand(update: Update, env: Env): Promise<string> {
 
-    const fromUserId = update.message?.from?.id.toString() || ''
-    const fromUsername = update.message?.from?.username || ''
     const allowedUserList = env.ALLOW_USER_IDS
+    let fromUserId = update.message?.from?.id.toString() || ''
+    let fromUsername = update.message?.from?.username || ''
+    let formFirstName = update.message?.from?.first_name || ''
+    let replyName = fromUsername ? `@${fromUsername}` : formFirstName
+
+    if ( replyName === "@GroupAnonymousBot") {
+        const username = update.message?.sender_chat?.username || ''
+        const title = update.message?.sender_chat?.title || ''
+        fromUsername = update.message?.sender_chat?.username || ''
+        fromUserId = update.message?.sender_chat?.id.toString() || ''
+        replyName = username ? `@${username}` : title
+    }
 
     if (!allowedUserList.includes(fromUsername) && !allowedUserList.includes(fromUserId)) {
-        return 'You are not allowed to sync with XLog. Please contact manager to get access.'
+        return `${replyName} 噢呀～看来您还没有变身的魔法呢～ (＞ｍ＜) 为了同步XLog，您需要管理员大人的特别许可哦！快快联系管理员大大，拿到闪闪发光的权限吧～ヾ(｡>﹏<｡)ﾉﾞ✧*。`
     }
 
     if (!update.message?.reply_to_message) {
-        return 'No message found to sync with XLog.'
+        return `${replyName} 哎呀，看起来有点技术问题哦 (｡•́︿•̀｡)～“没有找到与XLog同步的消息呢。” \n\n快快联系管理员大大帮忙弄清楚是怎么回事呀？ヾ(｡･ω･｡)`
     }
 
     let content = update.message.reply_to_message.text || update.message.reply_to_message.caption || ''
-    content = `${content}\n#from_telegram`
+    content = `${content}`
 
     try {
         const photoUrlList = await getTelegramPhotoUrlList(update.message.reply_to_message, env)
@@ -50,7 +60,7 @@ export async function processSyncXLogCommand(update: TelegramUpdate, env: Env): 
             return `Failed to post to XLog: ${JSON.stringify(response)}`
         } else {
             // TODO: debug mode
-            return `Your message has been posted to XLog. data: ${JSON.stringify(response.data)}` //, metadata: ${JSON.stringify(attachmentUrlList)}, response: ${JSON.stringify(photoUrlList)}`
+            return `消息已经成功送到 XLog 了呢~ 🎈 快去看看吧：\n\nhttps://xlog.app/api/redirection?characterId=${env.XLOG_CHARACTER_ID}&noteId=${response.data.noteId} ฅ^•ﻌ•^ฅ` //, metadata: ${JSON.stringify(attachmentUrlList)}, response: ${JSON.stringify(photoUrlList)}`
         }
     } catch (error) {
         return `Failed to post to XLog: ${error}`

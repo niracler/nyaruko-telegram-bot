@@ -68,6 +68,7 @@ Nyaruko 需要以下环境变量的支持来发挥其作用：
 |`TWITTER_API_SECRET`|否|`secret`|您的 Twitter API 密钥密文|
 |`TWITTER_ACCESS_TOKEN`|否|`secret`|Twitter 的访问令牌|
 |`TWITTER_ACCESS_TOKEN_SECRET`|否|`secret`|Twitter 的访问令牌密文|
+|`TWITTER_USER_ID`|否|`wrangler.yml`|您的 Twitter 用户 ID|
 |`OPENAI_API_KEY`|否|`secret`|OpenAI 的 API 密钥。用于开启 ai 聊天功能|
 
 ### 关于设置环境变量

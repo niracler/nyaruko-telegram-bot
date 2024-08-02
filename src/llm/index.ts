@@ -1,7 +1,8 @@
 import OpenAI from "openai"
 import { ChatCompletionContentPart, ChatCompletionMessageParam } from 'openai/resources'
-import { TelegramMessage, TelegramUpdate, Env as CoreEnv } from "../core/type"
-import { getTelegramPhotoUrlList } from "../core/utils"
+import { Env as CoreEnv } from "@/core/type"
+import { getTelegramPhotoUrlList } from "@/core/utils"
+import { Update, Message } from "grammy/types"
 
 export type Env = {
     OPENAI_API_KEY: string
@@ -14,8 +15,15 @@ export type Env = {
  * @param env - The environment object containing the OpenAI API key.
  * @returns A promise that resolves to a string representing the generated response.
  */
-export async function processLLM(update: TelegramUpdate, env: Env): Promise<string> {
-    if (!update.message?.text && !update.message?.caption) return 'No text found to process.'
+export async function processLLM(update: Update, env: Env): Promise<string> {
+    if (!update.message) return ''
+    const content = update.message?.text || update.message?.caption || ''
+    const replyName = update.message?.reply_to_message?.from?.username || ''
+    console.log(`content: ${content}, replyName: ${JSON.stringify(update.message)}`)
+
+    if (!content.includes(`@${env.TELEGRAM_BOT_USERNAME}`) && replyName !== env.TELEGRAM_BOT_USERNAME) {
+        return ''
+    }
 
     try {
         const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
@@ -36,11 +44,30 @@ export async function processLLM(update: TelegramUpdate, env: Env): Promise<stri
 
         let model
         let maxTokens
-        if (update.message?.reply_to_message?.photo?.length || update.message?.photo?.length) {
-            model = "gpt-4-vision-preview"
-            maxTokens = 4096
+        const allowedUserList = env.ALLOW_USER_IDS
+
+        let fromUserId = update.message?.from?.id.toString() || ''
+        let fromUsername = update.message?.from?.username || ''
+        let formFirstName = update.message?.from?.first_name || ''
+        let replyName = fromUsername ? `@${fromUsername}` : formFirstName
+
+        if (replyName === "@GroupAnonymousBot") {
+            const username = update.message?.sender_chat?.username || ''
+            const title = update.message?.sender_chat?.title || ''
+            fromUsername = update.message?.sender_chat?.username || ''
+            fromUserId = update.message?.sender_chat?.id.toString() || ''
+            replyName = username ? `@${username}` : title
+        }
+
+        if (allowedUserList.includes(fromUserId) ||
+            allowedUserList.includes(fromUsername)) {
+            model = "gpt-4o"
         } else {
-            model = "gpt-4-1106-preview"
+            if (update.message?.reply_to_message?.photo?.length || update.message?.photo?.length) {
+                return "抱歉，不是所有人都能使用图片哦~"
+            }
+            // TODO: make a function to check if user is allowed to use the model
+            model = "gpt-3.5-turbo"
         }
 
         const completion = await openai.chat.completions.create({
@@ -60,7 +87,7 @@ export async function processLLM(update: TelegramUpdate, env: Env): Promise<stri
  * @param env The environment configuration.
  * @returns A promise that resolves to an array of ChatCompletionContentPart objects or a string.
  */
-async function messageToContentPart(message: TelegramMessage | undefined, env: Env): Promise<ChatCompletionContentPart[] | string> {
+async function messageToContentPart(message: Message | undefined, env: Env): Promise<ChatCompletionContentPart[] | string> {
     if (!message) return ""
 
     if (!message.photo?.length) {

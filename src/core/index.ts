@@ -1,8 +1,9 @@
 import telegramifyMarkdown from "telegramify-markdown"
 import { Env } from "./type"
-import { Update } from 'grammy/types'
+import { Message, Update } from 'grammy/types'
 import { syncToDatabase } from "./db"
 import { Bot } from "grammy"
+import { getUserInfo } from "./utils"
 
 async function handleTelegramUpdate(update: Update, env: Env, handler: () => Promise<string>) {
     const message = update.message
@@ -25,30 +26,15 @@ async function handleTelegramUpdate(update: Update, env: Env, handler: () => Pro
     }
 }
 
-function getUserInfo(update: Update): { replyName: string, id: number } {
-    const from = update.message?.from
-    const senderChat = update.message?.sender_chat
-    
-    if (from?.username === "GroupAnonymousBot" && senderChat) {
-        return {
-            replyName: senderChat.username ? `@${senderChat.username}` : senderChat.title || '',
-            id: senderChat.id || 0
-        }
-    }
-
-    return {
-        replyName: from?.username ? `@${from.username}` : from?.first_name || '',
-        id: from?.id || 0
-    }
-}
-
 async function processGetGroupIdCommand(update: Update): Promise<string> {
-    const { replyName } = getUserInfo(update)
+    if (!update.message) return ""
+    const { replyName } = getUserInfo(update.message)
     return `哟呼～记下来啦！${replyName} 的聊天 ID 是 \`${update.message?.chat.id}\` 呢~ (｡•̀ᴗ-)✧ `
 }
 
 async function processGetUserIdCommand(update: Update): Promise<string> {
-    const { replyName, id } = getUserInfo(update)
+    if (!update.message) return ""
+    const { replyName, id } = getUserInfo(update.message)
     return `呀～ ${replyName} ，您的 ID 是 \`${id}\` 哦！ヽ(＾Д＾)ﾉ`
 }
 
@@ -73,5 +59,5 @@ export default {
     handleTelegramUpdate,
     processGetGroupIdCommand,
     processGetUserIdCommand,
-    processPingCommand
+    processPingCommand,
 }

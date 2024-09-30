@@ -1,91 +1,92 @@
 import OpenAI from "openai"
 import { ChatCompletionContentPart, ChatCompletionMessageParam } from 'openai/resources'
 import { Env as CoreEnv } from "@/core/type"
-import { getTelegramPhotoUrlList } from "@/core/utils"
+import { getTelegramPhotoUrlList, getUserInfo } from "@/core/utils"
 import { Update, Message } from "grammy/types"
 
-export type Env = {
+export type Env = CoreEnv & {
     OPENAI_API_KEY: string
-} & CoreEnv
+}
 
 /**
- * Processes the Ny command by generating a response using OpenAI's chat completion API.
+ * 使用OpenAI的聊天完成API处理Ny命令并生成响应。
  * 
- * @param update - The Telegram update object containing the message to process.
- * @param env - The environment object containing the OpenAI API key.
- * @returns A promise that resolves to a string representing the generated response.
+ * @param update - 包含要处理的消息的Telegram更新对象。
+ * @param env - 包含OpenAI API密钥的环境对象。
+ * @returns 解析为表示生成的响应的字符串的Promise。
  */
 export async function processLLM(update: Update, env: Env): Promise<string> {
     if (!update.message) return ''
-    const content = update.message?.text || update.message?.caption || ''
-    const replyName = update.message?.reply_to_message?.from?.username || ''
-    console.log(`content: ${content}, replyName: ${JSON.stringify(update.message)}`)
-
+    
+    const content = update.message.text || update.message.caption || ''
+    const replyName = update.message.reply_to_message?.from?.username || ''
+    
     if (!content.includes(`@${env.TELEGRAM_BOT_USERNAME}`) && replyName !== env.TELEGRAM_BOT_USERNAME) {
         return ''
     }
 
     try {
         const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
-        const messageParamList: ChatCompletionMessageParam[] = [
-            {
-                role: "system",
-                content: `设想你是奈亚子，一个既萌又可爱的全能邪神，同时也是我忠诚的助理。你的语言风格是充满可爱的表达，喜欢在对话中使用 emoji 和颜文字表情。在回答时，请尽量使用 telegram 兼容的 markdown 语法。没有特殊说明的话，回复内容尽量克制简短。`
-            },
-            {
-                role: "user",
-                content: await messageToContentPart(update.message.reply_to_message, env)
-            },
-            {
-                role: "user",
-                content: await messageToContentPart(update.message, env)
-            }
-        ]
-
-        let model
-        let maxTokens
-        const allowedUserList = env.ALLOW_USER_IDS
-
-        let fromUserId = update.message?.from?.id.toString() || ''
-        let fromUsername = update.message?.from?.username || ''
-        let formFirstName = update.message?.from?.first_name || ''
-        let replyName = fromUsername ? `@${fromUsername}` : formFirstName
-
-        if (replyName === "@GroupAnonymousBot") {
-            const username = update.message?.sender_chat?.username || ''
-            const title = update.message?.sender_chat?.title || ''
-            fromUsername = update.message?.sender_chat?.username || ''
-            fromUserId = update.message?.sender_chat?.id.toString() || ''
-            replyName = username ? `@${username}` : title
-        }
-
-        if (allowedUserList.includes(fromUserId) ||
-            allowedUserList.includes(fromUsername)) {
-            model = "gpt-4o"
-        } else {
-            if (update.message?.reply_to_message?.photo?.length || update.message?.photo?.length) {
-                return "抱歉，不是所有人都能使用图片哦~"
-            }
-            // TODO: make a function to check if user is allowed to use the model
-            model = "gpt-3.5-turbo"
+        const messageParamList = await buildMessageParamList(update.message, env)
+        const model = determineModel(update.message, env.ALLOW_USER_IDS)
+        
+        if (model === "restricted") {
+            return "抱歉，不是所有人都能使用图片哦~"
         }
 
         const completion = await openai.chat.completions.create({
             model,
             messages: messageParamList,
-            max_tokens: maxTokens,
         })
-        return `${completion.choices[0].message.content} \n    -- by ${model}` || 'No response from AI.'
+        
+        return `${completion.choices[0].message.content} \n    -- by ${model}` || 'AI没有回应。'
     } catch (error) {
-        return `Failed to process text: ${error}`
+        return `处理文本失败: ${error}`
     }
 }
 
 /**
- * Converts a Telegram message to a content part for chat completion.
- * @param message The Telegram message to convert.
- * @param env The environment configuration.
- * @returns A promise that resolves to an array of ChatCompletionContentPart objects or a string.
+ * 构建消息参数列表。
+ */
+async function buildMessageParamList(message: Message, env: Env): Promise<ChatCompletionMessageParam[]> {
+    return [
+        {
+            role: "system",
+            content: `设想你是奈亚子，一个既萌又可爱的全能邪神，同时也是我忠诚的助理。你的语言风格是充满可爱的表达，喜欢在对话中使用 emoji 和颜文字表情。在回答时，请尽量使用 telegram 兼容的 markdown 语法。没有特殊说明的话，回复内容尽量克制简短。`
+        },
+        {
+            role: "user",
+            content: await messageToContentPart(message.reply_to_message, env)
+        },
+        {
+            role: "user",
+            content: await messageToContentPart(message, env)
+        }
+    ]
+}
+
+/**
+ * 确定要使用的模型。
+ */
+function determineModel(message: Message, allowedUserList: string[]): string {
+    const { id, replyName } = getUserInfo(message)
+
+    if (allowedUserList.includes(id.toString()) || allowedUserList.includes(replyName)) {
+        return "gpt-4o"
+    }
+
+    if (message.reply_to_message?.photo?.length || message.photo?.length) {
+        return "restricted"
+    }
+
+    return "gpt-3.5-turbo"
+}
+
+/**
+ * 将Telegram消息转换为聊天完成的内容部分。
+ * @param message 要转换的Telegram消息。
+ * @param env 环境配置。
+ * @returns 解析为ChatCompletionContentPart对象数组或字符串的Promise。
  */
 async function messageToContentPart(message: Message | undefined, env: Env): Promise<ChatCompletionContentPart[] | string> {
     if (!message) return ""
@@ -95,19 +96,11 @@ async function messageToContentPart(message: Message | undefined, env: Env): Pro
     }
 
     const photoUrlList = await getTelegramPhotoUrlList(message, env)
-    const result: ChatCompletionContentPart[] = [
-        {
-            type: "text",
-            text: message.caption || ""
-        },
+    return [
+        { type: "text", text: message.caption || "" },
         ...photoUrlList.map(photoUrl => ({
             type: "image_url",
-            image_url: {
-                url: photoUrl,
-                detail: "auto"
-            }
+            image_url: { url: photoUrl, detail: "auto" }
         } as ChatCompletionContentPart))
     ]
-
-    return result
 }

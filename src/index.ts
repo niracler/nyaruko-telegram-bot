@@ -4,8 +4,7 @@ import twitter, { Env as TwitterEnv } from './twitter'
 import { processLLM, Env as LLMEnv } from './llm'
 import { processSyncXLogCommand, Env as XLogEnv } from './xlog'
 import { processSearchCommand } from './channel'
-import { processRandom } from './random'
-import { Env as RandomEnv } from './random'
+import { processRandom, Env as RandomEnv } from './random'
 import { Update } from 'grammy/types'
 
 export type Env = LLMEnv & XLogEnv & TwitterEnv & RandomEnv

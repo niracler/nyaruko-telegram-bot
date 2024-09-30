@@ -1,3 +1,10 @@
+# [0.4.0](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.3.0...v0.4.0) (2024-08-02)
+
+
+### Features
+
+* Simplifying the search feature ([#58](https://github.com/niracler/nyaruko-telegram-bot/issues/58)) ([81e964c](https://github.com/niracler/nyaruko-telegram-bot/commit/81e964c222ed600cc23c46eb349b9f9778c87ca9)), closes [#57](https://github.com/niracler/nyaruko-telegram-bot/issues/57)
+
 # [0.3.0](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.2.3...v0.3.0) (2024-02-07)
 
 

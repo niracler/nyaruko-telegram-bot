@@ -1,5 +1,5 @@
 import { Env } from "./type"
-import { Update } from 'grammy/types'
+import { Message } from 'grammy/types'
 
 /**
  * Inserts the Telegram update data into the database.
@@ -8,9 +8,8 @@ import { Update } from 'grammy/types'
  * @param env - The environment object.
  * @returns A promise that resolves when the data is successfully inserted into the database.
  */
-export async function syncToDatabase(update: Update, env: Env) {
-    console.log('syncToDatabase', JSON.stringify(update, null, 2))
-    if (!update.message) return
+export async function syncToDatabase(updateId: number, message: Message, env: Env) {
+    console.log('syncToDatabase', JSON.stringify(message, null, 2))
 
     await env.DB.prepare(`
     INSERT INTO telegram_messages (
@@ -48,32 +47,32 @@ export async function syncToDatabase(update: Update, env: Env) {
         ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
     )
 `).bind(
-        update.update_id,
-        update.message.message_id,
-        update.message.from?.id || null,
-        update.message.from?.first_name || null,
-        update.message.from?.username || null,
-        update.message.sender_chat?.id || null,
-        update.message.sender_chat?.title || null,
-        update.message.sender_chat?.username || null,
-        update.message.sender_chat?.type || null,
-        update.message.chat?.id || null,
-        update.message.chat?.title || null,
-        update.message.chat?.username || null,
-        update.message.chat?.type || null,
-        update.message.date,
-        update.message.message_id,
-        update.message.reply_to_message?.message_id || null,
-        update.message.reply_to_message?.from?.id || null,
-        update.message.reply_to_message?.from?.first_name || null,
-        update.message.reply_to_message?.sender_chat?.id || null,
-        update.message.reply_to_message?.sender_chat?.title || null,
-        update.message.reply_to_message?.sender_chat?.type || null,
-        update.message.reply_to_message?.date || null,
+        updateId,
+        message.message_id,
+        message.from?.id || null,
+        message.from?.first_name || null,
+        message.from?.username || null,
+        message.sender_chat?.id || null,
+        message.sender_chat?.title || null,
+        message.sender_chat?.username || null,
+        message.sender_chat?.type || null,
+        message.chat?.id || null,
+        message.chat?.title || null,
+        message.chat?.username || null,
+        message.chat?.type || null,
+        message.date,
+        message.message_id,
+        message.reply_to_message?.message_id || null,
+        message.reply_to_message?.from?.id || null,
+        message.reply_to_message?.from?.first_name || null,
+        message.reply_to_message?.sender_chat?.id || null,
+        message.reply_to_message?.sender_chat?.title || null,
+        message.reply_to_message?.sender_chat?.type || null,
+        message.reply_to_message?.date || null,
         null, null, null, null,
-        update.message.media_group_id || null,
-        update.message.photo?.length ? update.message.photo[update.message.photo.length - 1].file_id : null,
-        update.message.caption || null,
-        update.message.text || null
+        message.media_group_id || null,
+        message.photo?.length ? message.photo[message.photo.length - 1].file_id : null,
+        message.caption || null,
+        message.text || null
     ).run()
 }

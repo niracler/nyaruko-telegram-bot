@@ -48,3 +48,20 @@ async function getTelegramFileUrl(fileId: string, botSecret: string): Promise<st
     const filePath = fileData.result.file_path
     return `https://api.telegram.org/file/bot${botSecret}/${filePath}`
 }
+
+export function getUserInfo(message: Message): { replyName: string, id: number } {
+    const from = message?.from
+    const senderChat = message?.sender_chat
+
+    if (from?.username === "GroupAnonymousBot" && senderChat) {
+        return {
+            replyName: senderChat.username ? `@${senderChat.username}` : senderChat.title || '',
+            id: senderChat.id || 0
+        }
+    }
+
+    return {
+        replyName: from?.username ? `@${from.username}` : from?.first_name || '',
+        id: from?.id || 0
+    }
+}

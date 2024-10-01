@@ -1,6 +1,6 @@
 import telegramifyMarkdown from "telegramify-markdown"
 import { Env } from "./type"
-import { Message, Update } from 'grammy/types'
+import { Update } from 'grammy/types'
 import { syncToDatabase } from "./db"
 import { Bot } from "grammy"
 import { getUserInfo } from "./utils"

@@ -19,7 +19,7 @@ interface TwitterResponse {
         id: string
         text: string
     }
-    errors?: any
+    errors?: unknown
 }
 
 async function processSyncTwitterCommand(update: Update, env: Env): Promise<string> {
@@ -110,10 +110,12 @@ async function uploadPhotosToTwitter(photoUrlList: string[], env: Env): Promise<
         return media
     })
 
-    return Promise.all(uploadPromises)
+    const result = await Promise.all(uploadPromises)
+
+    return result.map(media => media.data?.id).filter((id): id is string => id !== undefined)
 }
 
-async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Promise<any> {
+async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Promise<TwitterResponse> {
     return makeTwitterRequest(
         'https://upload.X.com/1.1/media/upload.json?media_category=tweet_image',
         'POST',
@@ -123,7 +125,7 @@ async function uploadMediaToTwitter(mediaData: ArrayBuffer, env: Env): Promise<a
     )
 }
 
-async function postTweet(text: string, mediaList: string[], replyId: string | undefined, env: Env): Promise<any> {
+async function postTweet(text: string, mediaList: string[], replyId: string | undefined, env: Env): Promise<TwitterResponse> {
     const msg = {
         text,
         reply: replyId ? { in_reply_to_tweet_id: replyId } : undefined,
@@ -133,7 +135,7 @@ async function postTweet(text: string, mediaList: string[], replyId: string | un
     return makeTwitterRequest('https://api.twitter.com/2/tweets', 'POST', JSON.stringify(msg), 'application/json', env)
 }
 
-async function makeTwitterRequest(url: string, method: string, data: any, contentType: string, env: Env): Promise<any> {
+async function makeTwitterRequest(url: string, method: string, data: string | URLSearchParams, contentType: string, env: Env): Promise<TwitterResponse> {
     const oauth = new OAuth({
         consumer: { key: env.TWITTER_API_KEY, secret: env.TWITTER_API_SECRET },
         signature_method: 'HMAC-SHA1',
@@ -157,7 +159,7 @@ async function makeTwitterRequest(url: string, method: string, data: any, conten
     console.log(contentType)
     console.log(JSON.stringify(headers))
 
-    return response.json()
+    return response.json() as Promise<TwitterResponse>
 }
 
 export default {

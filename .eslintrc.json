@@ -1,0 +1,27 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "extends": "eslint:recommended",
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ], // 4 个空格缩进
+        "semi": [
+            "error",
+            "always"
+        ], // 强制使用分号
+        "quotes": [
+            "error",
+            "single"
+        ], // 可选：强制使用单引号
+        "no-console": "off" // 可选：允许使用 console.log
+    }
+}

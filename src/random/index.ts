@@ -1,6 +1,6 @@
 import { Env as CoreEnv } from "@/core/type"
 import { getTelegramPhotoUrlList, getUserInfo } from "@/core/utils"
-import { Update } from "grammy/types"
+import { Update, Message } from "grammy/types"
 
 export type Env = {
     MY_BUCKET: R2Bucket
@@ -26,7 +26,7 @@ export async function processRandom(update: Update, env: Env): Promise<string> {
     return ''
 }
 
-function getIssueUrl(entities?: any[]): string | undefined {
+function getIssueUrl(entities?: Array<{ url?: string, type: string }>): string | undefined {
     if (!entities) return undefined
 
     for (const entity of entities) {
@@ -41,7 +41,7 @@ function getIssueUrl(entities?: any[]): string | undefined {
     return undefined
 }
 
-async function buildContent(message: any, env: Env): Promise<string> {
+async function buildContent(message: Message, env: Env): Promise<string> {
     let content = message.text || message.caption || ''
     const photoUrlList = await getTelegramPhotoUrlList(message, env)
 

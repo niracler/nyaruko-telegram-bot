@@ -39,7 +39,7 @@ export async function processLLM(update: Update, env: Env): Promise<string> {
             messages: messageParamList,
         })
         
-        return `${completion.choices[0].message.content} \n    -- by ${model}` || 'AI没有回应。'
+        return `${completion.choices[0].message.content} \n    -- by ${model}`
     } catch (error) {
         return `处理文本失败: ${error}`
     }

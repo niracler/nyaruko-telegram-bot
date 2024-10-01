@@ -1,5 +1,8 @@
+import { drizzle } from "drizzle-orm/d1";
 import { Env } from "./type"
 import { Message } from "grammy/types"
+import { eq } from "drizzle-orm";
+import { telegramMessages } from "./schema";
 
 
 /**
@@ -11,16 +14,15 @@ import { Message } from "grammy/types"
  * @returns A promise that resolves to an array of photo URLs.
  */
 export async function getTelegramPhotoUrlList(message: Message, env: Env): Promise<string[]> {
-    let photoIdList = []
+    let photoIdList: string[] = []
     if (!message.media_group_id) {
         if (message.photo?.length) {
             photoIdList = [message.photo[message.photo.length - 1].file_id]
         }
     } else {
-        const mediaGroup = await env.DB.prepare(`
-                SELECT * FROM telegram_messages WHERE media_group_id = ?
-            `).bind(message.media_group_id).all()
-        photoIdList = mediaGroup.results.map((message: any) => message.photo_file_id)
+        const db = drizzle(env.DB);
+        const mediaGroup = await db.select().from(telegramMessages).where(eq(telegramMessages.mediaGroupId, Number(message.media_group_id)))
+        photoIdList = mediaGroup.map((message) => message.photoFileId).filter((id): id is string => id !== null)
     }
 
     const photoUrlList = []

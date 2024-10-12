@@ -1,7 +1,9 @@
 import { Hono } from 'hono'
 import core from './core'
 import twitter, { Env as TwitterEnv } from './twitter'
-import { processLLM, Env as LLMEnv } from './llm'
+import { processLLM } from './llm'
+import llmApp from './llm/route'
+import { Env as LLMEnv } from './llm/type'
 import { processSyncXLogCommand, Env as XLogEnv } from './xlog'
 import { processSearchCommand } from './channel'
 import { processRandom, Env as RandomEnv } from './random'
@@ -47,5 +49,6 @@ app.post('/', async (c) => {
 })
 
 app.get('/', (c) => c.text('Expecting POST request'))
+app.route('/llm', llmApp)
 
 export default app

@@ -1,12 +1,8 @@
 import OpenAI from "openai"
 import { ChatCompletionContentPart, ChatCompletionMessageParam } from 'openai/resources'
-import { Env as CoreEnv } from "@/core/type"
 import { getTelegramPhotoUrlList, getUserInfo } from "@/core/utils"
 import { Update, Message } from "grammy/types"
-
-export type Env = CoreEnv & {
-    OPENAI_API_KEY: string
-}
+import { Env } from "./type"
 
 /**
  * 使用OpenAI的聊天完成API处理Ny命令并生成响应。

@@ -1,7 +1,7 @@
 import fs from 'fs'
 import fetch from 'node-fetch'
 
-const LIMIT = 10
+const LIMIT = 1000
 
 async function main() {
     const directory = "/Users/niracler/Library/Mobile Documents/iCloud~md~obsidian/Documents/Note/🌍 Areas";

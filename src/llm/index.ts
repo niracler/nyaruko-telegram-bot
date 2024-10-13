@@ -22,6 +22,10 @@ export async function processLLM(update: Update, env: Env): Promise<string> {
     }
 
     try {
+        if (content.startsWith(`@${env.TELEGRAM_BOT_USERNAME} 提问: `)) {
+            return await processTextQuestion(content.split(`@${env.TELEGRAM_BOT_USERNAME} 提问: `)[1], env)
+        }
+
         const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
         const messageParamList = await buildMessageParamList(update.message, env)
         const model = determineModel(update.message, env.ALLOW_USER_IDS)
@@ -40,6 +44,59 @@ export async function processLLM(update: Update, env: Env): Promise<string> {
         return `处理文本失败: ${error}`
     }
 }
+
+async function processTextQuestion(question: string, env: Env): Promise<string> {
+    const openai = new OpenAI({ apiKey: env.OPENAI_API_KEY })
+    const { data } = await openai.embeddings.create({
+        input: [question],
+        model: 'text-embedding-ada-002',
+    })
+
+    const vectors = data[0].embedding
+
+    const SIMILARITY_CUTOFF = 0.78
+    const vectorQuery = await env.VECTORIZE_INDEX.query(vectors, { topK: 5 });
+    const vecIds = vectorQuery.matches
+        .filter(vec => vec.score > SIMILARITY_CUTOFF)
+        .map(vec => Math.floor(Number(vec.id) / 100))
+
+    if (!vecIds.length) {
+        return "没有找到相关文章"
+    }
+
+    const query = `SELECT * FROM articles WHERE id IN (${vecIds.join(", ")})`
+    let { results } = await env.DB.prepare(query).bind().all()
+    if (results) results = results.map(vec => {
+        return {
+            id: vec.id,
+            filepath: vec.file_path,
+            content: vec.content,
+            score: vectorQuery.matches.find(match => Math.floor(Number(match.id) / 100) === vec.id)?.score
+        }
+    })
+
+    const contextMessage = `
+        设想你是奈亚子，一个既萌又可爱的全能邪神，同时也是我的知识库助理。
+        1. 你的语言风格是充满可爱的表达，喜欢在对话中使用 emoji 和颜文字表情。
+        2. 在回答时，请尽量使用 telegram 兼容的 markdown 语法。
+        3. 回复的时候请表明你是根据那几篇文章回答的哦~
+
+        以下是我为你找到的相关文章：
+        \n${JSON.stringify(results, null, 2)}\n
+
+        生成规则：请基于上面的片段，回答 ${question}
+    `
+
+    const completion = await openai.chat.completions.create({
+        messages: [
+            { role: 'user', content: contextMessage }
+        ],
+        model: "gpt-4o-mini"
+    })
+
+    return completion.choices[0].message.content || "没有回应";
+}
+
 
 /**
  * 构建消息参数列表。

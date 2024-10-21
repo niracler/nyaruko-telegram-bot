@@ -3,15 +3,8 @@ import { Message } from 'grammy/types';
 import { drizzle } from 'drizzle-orm/d1';
 import { telegramMessages } from './schema';
 
-/**
-   * 将Telegram更新数据同步到数据库。
-   * 
-   * @param updateId - Telegram更新ID。
-   * @param message - Telegram消息对象。
-   * @param env - 环境对象。
-   * @returns 一个Promise，在数据成功插入数据库时解析。
- */
 export async function syncToDatabase(updateId: number, message: Message, env: Env) {
+    // TODO: use sentry to log errors
     console.log('syncToDatabase', JSON.stringify(message, null, 2));
 
     const db = drizzle(env.DB);

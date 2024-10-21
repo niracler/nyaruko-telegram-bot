@@ -1,3 +1,18 @@
+# [0.5.0](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.4.0...v0.5.0) (2024-10-21)
+
+
+### Bug Fixes
+
+* LLM permission ([90e61c9](https://github.com/niracler/nyaruko-telegram-bot/commit/90e61c9475ebfedc0e64e71555c8c49a23ff9f15))
+
+
+### Features
+
+* add comment to github issue ([7abb951](https://github.com/niracler/nyaruko-telegram-bot/commit/7abb951fac6d17329604941d571b92ecce91c039))
+* auto delete command & reply the tweet url ([6572577](https://github.com/niracler/nyaruko-telegram-bot/commit/6572577497628e26fc688948826bba692d274fc7))
+* update to use gpt-4o for allow user ([#57](https://github.com/niracler/nyaruko-telegram-bot/issues/57)) ([420327e](https://github.com/niracler/nyaruko-telegram-bot/commit/420327e6c3b22b1cbe9872d030343c30d4560342))
+* use langchain ([#99](https://github.com/niracler/nyaruko-telegram-bot/issues/99)) ([6c93fcc](https://github.com/niracler/nyaruko-telegram-bot/commit/6c93fccc21d9484847d2eec35d28c736ba8ad2f4)), closes [#97](https://github.com/niracler/nyaruko-telegram-bot/issues/97)
+
 # [0.4.0](https://github.com/niracler/nyaruko-telegram-bot/compare/v0.3.0...v0.4.0) (2024-08-02)
 
 

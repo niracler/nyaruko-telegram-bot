@@ -1,79 +1,43 @@
-import { Env } from "./type"
-import { Update } from 'grammy/types'
+import { Env } from "./type";
+import { Message } from 'grammy/types';
+import { drizzle } from 'drizzle-orm/d1';
+import { telegramMessages } from './schema';
 
-/**
- * Inserts the Telegram update data into the database.
- * 
- * @param update - The Telegram update object.
- * @param env - The environment object.
- * @returns A promise that resolves when the data is successfully inserted into the database.
- */
-export async function syncToDatabase(update: Update, env: Env) {
-    console.log('syncToDatabase', JSON.stringify(update, null, 2))
-    if (!update.message) return
+export async function syncToDatabase(updateId: number, message: Message, env: Env) {
+    // TODO: use sentry to log errors
+    console.log('syncToDatabase', JSON.stringify(message, null, 2));
 
-    await env.DB.prepare(`
-    INSERT INTO telegram_messages (
-        update_id,
-        message_id,
-        user_id,
-        first_name,
-        username,
-        sender_chat_id,
-        sender_chat_title,
-        sender_chat_username,
-        sender_chat_type,
-        chat_id,
-        chat_title,
-        chat_username,
-        chat_type,
-        date,
-        message_thread_id,
-        reply_to_message_id,
-        reply_from_id,
-        reply_from_first_name,
-        reply_sender_chat_id,
-        reply_sender_chat_title,
-        reply_sender_chat_type,
-        reply_date,
-        forward_from_chat_id,
-        forward_from_chat_title,
-        forward_from_chat_type,
-        forward_from_message_id,
-        media_group_id,
-        photo_file_id,
-        caption,
-        text
-    ) VALUES (
-        ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?
-    )
-`).bind(
-        update.update_id,
-        update.message.message_id,
-        update.message.from?.id || null,
-        update.message.from?.first_name || null,
-        update.message.from?.username || null,
-        update.message.sender_chat?.id || null,
-        update.message.sender_chat?.title || null,
-        update.message.sender_chat?.username || null,
-        update.message.sender_chat?.type || null,
-        update.message.chat?.id || null,
-        update.message.chat?.title || null,
-        update.message.chat?.username || null,
-        update.message.chat?.type || null,
-        update.message.date,
-        update.message.message_id,
-        update.message.reply_to_message?.message_id || null,
-        update.message.reply_to_message?.from?.id || null,
-        update.message.reply_to_message?.from?.first_name || null,
-        update.message.reply_to_message?.sender_chat?.id || null,
-        update.message.reply_to_message?.sender_chat?.title || null,
-        update.message.reply_to_message?.sender_chat?.type || null,
-        update.message.reply_to_message?.date || null,
-        null, null, null, null,
-        update.message.media_group_id || null,
-        update.message.photo?.length ? update.message.photo[update.message.photo.length - 1].file_id : null,
-        update.message.caption || null,
-        update.message.text || null
-    ).run()
+    const db = drizzle(env.DB);
+    await db.insert(telegramMessages).values({
+        updateId,
+        messageId: message.message_id,
+        userId: message.from?.id,
+        firstName: message.from?.first_name,
+        username: message.from?.username,
+        senderChatId: message.sender_chat?.id.toString(),
+        senderChatTitle: message.sender_chat?.title,
+        senderChatUsername: message.sender_chat?.username,
+        senderChatType: message.sender_chat?.type,
+        chatId: message.chat?.id.toString(),
+        chatTitle: message.chat?.title,
+        chatUsername: message.chat?.username,
+        chatType: message.chat?.type,
+        date: message.date,
+        messageThreadId: message.message_thread_id,
+        replyToMessageId: message.reply_to_message?.message_id,
+        replyFromId: message.reply_to_message?.from?.id,
+        replyFromFirstName: message.reply_to_message?.from?.first_name,
+        replySenderChatId: message.reply_to_message?.sender_chat?.id,
+        replySenderChatTitle: message.reply_to_message?.sender_chat?.title,
+        replySenderChatType: message.reply_to_message?.sender_chat?.type,
+        replyDate: message.reply_to_message?.date ? message.reply_to_message.date : null,
+        forwardFromChatId: null,
+        forwardFromChatTitle: null,
+        forwardFromChatType: null,
+        forwardFromMessageId: null,
+        mediaGroupId: Number(message.media_group_id),
+        photoFileId: message.photo?.length ? message.photo[message.photo.length - 1].file_id.toString() : null,
+        caption: message.caption,
+        text: message.text
+    });
 }

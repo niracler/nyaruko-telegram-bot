@@ -1,83 +1,55 @@
 import { ipfsUploadFile } from "crossbell/ipfs"
 import { Env as CoreEnv } from "@/core/type"
-import { getTelegramPhotoUrlList } from "@/core/utils"
-import { Update } from "grammy/types"
+import { getTelegramPhotoUrlList, getUserInfo } from "@/core/utils"
+import { Update, Message } from "grammy/types"
 
-export type Env = {
+export type Env = CoreEnv & {
     XLOG_TOKEN: string
     XLOG_CHARACTER_ID: string
-} & CoreEnv
+}
+
+interface XLogResponse {
+    data?: {
+        noteId: string
+    }
+    errors?: unknown
+}
 
 /**
- * Processes the syncXLog command by syncing a message with XLog.
- * 
- * @param update - The Telegram update object.
- * @param env - The environment object.
- * @returns A promise that resolves to a string indicating the result of the sync operation.
+ * 处理同步XLog命令，将消息同步到XLog。
  */
 export async function processSyncXLogCommand(update: Update, env: Env): Promise<string> {
+    if (!update.message) return ''
+    const { id: fromUserId, replyName } = getUserInfo(update.message)
 
-    const allowedUserList = env.ALLOW_USER_IDS
-    let fromUserId = update.message?.from?.id.toString() || ''
-    let fromUsername = update.message?.from?.username || ''
-    let formFirstName = update.message?.from?.first_name || ''
-    let replyName = fromUsername ? `@${fromUsername}` : formFirstName
-
-    if ( replyName === "@GroupAnonymousBot") {
-        const username = update.message?.sender_chat?.username || ''
-        const title = update.message?.sender_chat?.title || ''
-        fromUsername = update.message?.sender_chat?.username || ''
-        fromUserId = update.message?.sender_chat?.id.toString() || ''
-        replyName = username ? `@${username}` : title
+    if (!isUserAuthorized(fromUserId, replyName, env)) {
+        return generateUnauthorizedMessage(replyName)
     }
 
-    if (!allowedUserList.includes(fromUsername) && !allowedUserList.includes(fromUserId)) {
-        return `${replyName} 噢呀～看来您还没有变身的魔法呢～ (＞ｍ＜) 为了同步XLog，您需要管理员大人的特别许可哦！快快联系管理员大大，拿到闪闪发光的权限吧～ヾ(｡>﹏<｡)ﾉﾞ✧*。`
+    if (!update.message.reply_to_message) {
+        return generateNoReplyMessage(replyName)
     }
-
-    if (!update.message?.reply_to_message) {
-        return `${replyName} 哎呀，看起来有点技术问题哦 (｡•́︿•̀｡)～“没有找到与XLog同步的消息呢。” \n\n快快联系管理员大大帮忙弄清楚是怎么回事呀？ヾ(｡･ω･｡)`
-    }
-
-    let content = update.message.reply_to_message.text || update.message.reply_to_message.caption || ''
-    content = `${content}`
 
     try {
+        const { title, content } = extractTitleAndContent(update.message)
         const photoUrlList = await getTelegramPhotoUrlList(update.message.reply_to_message, env)
-        const attachmentUrlList = await uploadPhotosToXLog(photoUrlList, env)
-        // first line is title, rest is content
-        let title
-        if (update.message.quote && update.message.quote.is_manual) {
-            title = update.message.quote.text
-        } else {
-            title = content.split('\n')[0] || 'Untitled'
-            content = content.slice(title.length + 1)
-        }
-
+        const attachmentUrlList = await uploadPhotosToXLog(photoUrlList)
         const response = await createShort(title, content, attachmentUrlList, env)
 
-        if (!response.data) {
-            return `Failed to post to XLog: ${JSON.stringify(response)}`
-        } else {
-            // TODO: debug mode
-            return `消息已经成功送到 XLog 了呢~ 🎈 快去看看吧：\n\nhttps://xlog.app/api/redirection?characterId=${env.XLOG_CHARACTER_ID}&noteId=${response.data.noteId} ฅ^•ﻌ•^ฅ` //, metadata: ${JSON.stringify(attachmentUrlList)}, response: ${JSON.stringify(photoUrlList)}`
-        }
+        return response.data 
+            ? generateSuccessMessage(env.XLOG_CHARACTER_ID, response.data.noteId)
+            : `发布到 XLog 失败：${JSON.stringify(response)}`
     } catch (error) {
-        return `Failed to post to XLog: ${error}`
+        return `发布到 XLog 失败：${error}`
     }
 }
 
 /**
- * Creates a short note in the XLOG system.
- * @param title - The title of the note.
- * @param content - The content of the note.
- * @param attachmentUrlList - The list of attachment URLs for the note.
- * @param env - The environment variables.
- * @returns A Promise that resolves to the response from the XLOG system.
+ * 在XLOG系统中创建短笔记。
  */
-export async function createShort(title: string, content: string, attachmentUrlList: string[], env: Env): Promise<any> {
-    const characterId = env.XLOG_CHARACTER_ID
-    const url = `https://indexer.crossbell.io/v1/siwe/contract/characters/${characterId}/notes`
+async function createShort(title: string, content: string, attachmentUrlList: string[], env: Env): Promise<XLogResponse> {
+    const url = `https://indexer.crossbell.io/v1/siwe/contract/characters/${env.XLOG_CHARACTER_ID}/notes`
+    const body = createRequestBody(title, content, attachmentUrlList)
 
     const response = await fetch(url, {
         method: 'PUT',
@@ -85,48 +57,77 @@ export async function createShort(title: string, content: string, attachmentUrlL
             Authorization: `Bearer ${env.XLOG_TOKEN}`,
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-            metadata: {
-                tags: ["short"],
-                type: "note",
-                title,
-                content,
-                summary: "",
-                sources: ["xlog"],
-                date_published: new Date().toISOString(),
-                attributes: [
-                    {
-                        // random with timestamp
-                        value: `${Date.now()}`,
-                        trait_type: "xlog_slug",
-                    },
-                ],
-                attachments: attachmentUrlList.map(url => ({
-                    name: "image",
-                    address: url,
-                    mime_type: "image/png",
-                })),
-            }
-        }),
+        body: JSON.stringify(body),
     })
 
-    return await response.json()
+    return response.json() as Promise<XLogResponse>
 }
 
 /**
- * Uploads photos to XLog.
- * 
- * @param photoUrlList - The list of photo URLs to upload.
- * @param env - The environment settings.
- * @returns A promise that resolves to an array of attachment URLs.
+ * 上传照片到XLog。
  */
-export async function uploadPhotosToXLog(photoUrlList: string[], env: Env): Promise<string[]> {
-    const attachmentUrlList = []
-    for (const photoUrl of photoUrlList) {
+async function uploadPhotosToXLog(photoUrlList: string[]): Promise<string[]> {
+    return Promise.all(photoUrlList.map(async (photoUrl) => {
         const mediaData = await fetch(photoUrl).then(res => res.arrayBuffer())
         const file = new File([mediaData], "mediaData")
-        const url = (await ipfsUploadFile(file)).url
-        attachmentUrlList.push(url)
+        return (await ipfsUploadFile(file)).url
+    }))
+}
+
+/**
+ * 从消息中提取标题和内容。
+ */
+function extractTitleAndContent(message: Message): { title: string, content: string } {
+    const content = message.reply_to_message?.text || message.reply_to_message?.caption || ''
+    
+    if (message.quote?.is_manual) {
+        return { title: message.quote.text, content }
     }
-    return attachmentUrlList
+
+    const lines = content.split('\n')
+    return { 
+        title: lines[0] || 'Untitled', 
+        content: lines.slice(1).join('\n') 
+    }
+}
+
+function isUserAuthorized(userId: number, username: string, env: Env): boolean {
+    return env.ALLOW_USER_IDS.includes(userId.toString()) || env.ALLOW_USER_IDS.includes(username)
+}
+
+function generateUnauthorizedMessage(replyName: string): string {
+    return `${replyName} 噢呀～看来您还没有变身的魔法呢～ (＞ｍ＜) 为了同步XLog，您需要管理员大人的特别许可哦！快快联系管理员大大，拿到闪闪发光的权限吧～ヾ(｡>﹏<｡)ﾉﾞ✧*。`
+}
+
+function generateNoReplyMessage(replyName: string): string {
+    return `${replyName} 哎呀，看起来有点技术问题哦 (｡•́︿•̀｡)～"没有找到与XLog同步的消息呢。" \n\n快快联系管理员大大帮忙弄清楚是怎么回事呀？ヾ(｡･ω･｡)`
+}
+
+function generateSuccessMessage(characterId: string, noteId: string): string {
+    return `消息已经成功送到 XLog 了呢~ 🎈 快去看看吧：\n\nhttps://xlog.app/api/redirection?characterId=${characterId}&noteId=${noteId} ฅ^•ﻌ•^ฅ`
+}
+
+function createRequestBody(title: string, content: string, attachmentUrlList: string[]) {
+    return {
+        metadata: {
+            tags: ["short"],
+            type: "note",
+            title,
+            content,
+            summary: "",
+            sources: ["xlog"],
+            date_published: new Date().toISOString(),
+            attributes: [
+                {
+                    value: `${Date.now()}`,
+                    trait_type: "xlog_slug",
+                },
+            ],
+            attachments: attachmentUrlList.map(url => ({
+                name: "image",
+                address: url,
+                mime_type: "image/png",
+            })),
+        }
+    }
 }

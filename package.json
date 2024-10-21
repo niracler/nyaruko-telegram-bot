@@ -40,7 +40,7 @@
     "crypto-js": "^4.2.0",
     "drizzle-orm": "^0.33.0",
     "grammy": "^1.30.0",
-    "hono": "^4.6.3",
+    "hono": "^4.6.5",
     "oauth-1.0a": "^2.2.6",
     "openai": "^4.66.1",
     "telegramify-markdown": "git+ssh://git@github.com/niracler/telegramify-markdown.git#master"

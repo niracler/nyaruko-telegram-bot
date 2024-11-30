@@ -46,7 +46,7 @@ async function sendReplyToTelegram(chatId: number, text: string, messageId: numb
     if (!text) return;
     const bot = new Bot(env.TELEGRAM_BOT_SECRET);
     try {
-        await bot.api.sendMessage(chatId, telegramifyMarkdown(text), {
+        await bot.api.sendMessage(chatId, telegramifyMarkdown(text, "keep"), {
             reply_to_message_id: messageId,
             parse_mode: 'MarkdownV2',
         });

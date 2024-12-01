@@ -24,7 +24,7 @@
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.27.0",
     "eslint": "^9.11.1",
-    "globals": "^15.9.0",
+    "globals": "^15.12.0",
     "node-fetch": "^3.3.2",
     "semantic-release": "^24.2.0",
     "tsx": "^4.19.2",

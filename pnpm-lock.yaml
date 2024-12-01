@@ -76,8 +76,8 @@ importers:
         specifier: ^9.11.1
         version: 9.11.1
       globals:
-        specifier: ^15.9.0
-        version: 15.9.0
+        specifier: ^15.12.0
+        version: 15.12.0
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
@@ -1767,8 +1767,8 @@ packages:
     resolution: {integrity: sha512-oahGvuMGQlPw/ivIYBjVSrWAfWLBeku5tpPE2fOPLi+WHffIWbuh2tCjhyQhTBPMf5E9jDEH4FOmTYgYwbKwtQ==}
     engines: {node: '>=18'}
 
-  globals@15.9.0:
-    resolution: {integrity: sha512-SmSKyLLKFbSr6rptvP8izbyxJL4ILwqO9Jg23UA0sDlGlu58V59D1//I3vlc0KJphVdUR7vMjHIplYnzBxorQA==}
+  globals@15.12.0:
+    resolution: {integrity: sha512-1+gLErljJFhbOVyaetcwJiJ4+eLe45S2E7P5UiZ9xGfeq3ATQf5DOv9G7MH3gGbKQLkzmNh2DxfZwLdw+j6oTQ==}
     engines: {node: '>=18'}
 
   globby@14.0.0:
@@ -4674,7 +4674,7 @@ snapshots:
 
   globals@14.0.0: {}
 
-  globals@15.9.0: {}
+  globals@15.12.0: {}
 
   globby@14.0.0:
     dependencies:

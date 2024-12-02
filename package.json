@@ -20,7 +20,7 @@
     "@semantic-release/github": "^11.0.0",
     "@semantic-release/release-notes-generator": "^14.0.1",
     "@types/crypto-js": "^4.2.2",
-    "@types/node": "^22.7.4",
+    "@types/node": "^22.10.1",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.27.0",
     "eslint": "^9.11.1",

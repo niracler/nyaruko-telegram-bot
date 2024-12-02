@@ -42,7 +42,7 @@
     "grammy": "^1.30.0",
     "hono": "^4.6.5",
     "oauth-1.0a": "^2.2.6",
-    "openai": "^4.66.1",
+    "openai": "^4.73.1",
     "telegramify-markdown": "^1.2.2"
   }
 }

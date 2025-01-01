@@ -39,7 +39,7 @@
     "crossbell": "^1.12.0",
     "crypto-js": "^4.2.0",
     "drizzle-orm": "^0.33.0",
-    "grammy": "^1.30.0",
+    "grammy": "^1.33.0",
     "hono": "^4.6.12",
     "oauth-1.0a": "^2.2.6",
     "openai": "^4.73.1",

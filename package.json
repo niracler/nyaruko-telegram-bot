@@ -13,7 +13,7 @@
     "start": "wrangler dev"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240925.0",
+    "@cloudflare/workers-types": "^4.20241230.0",
     "@eslint/js": "^9.16.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",

@@ -22,7 +22,7 @@
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^22.10.1",
     "dotenv": "^16.4.7",
-    "drizzle-kit": "^0.27.0",
+    "drizzle-kit": "^0.30.4",
     "eslint": "^9.11.1",
     "globals": "^15.13.0",
     "node-fetch": "^3.3.2",

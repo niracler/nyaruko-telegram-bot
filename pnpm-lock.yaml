@@ -30,8 +30,8 @@ importers:
         specifier: ^1.34.1
         version: 1.34.1
       hono:
-        specifier: ^4.6.15
-        version: 4.6.15
+        specifier: ^4.7.2
+        version: 4.7.2
       oauth-1.0a:
         specifier: ^2.2.6
         version: 2.2.6
@@ -1824,8 +1824,8 @@ packages:
   highlight.js@10.7.3:
     resolution: {integrity: sha512-tzcUFauisWKNHaRkN4Wjl/ZA07gENAjFl3J/c480dprkGTg5EQstgaNFqBfUqCq54kZRIEcreTsAgF/m2quD7A==}
 
-  hono@4.6.15:
-    resolution: {integrity: sha512-OiQwvAOAaI2JrABBH69z5rsctHDzFzIKJge0nYXgtzGJ0KftwLWcBXm1upJC23/omNRtnqM0gjRMbtXshPdqhQ==}
+  hono@4.7.2:
+    resolution: {integrity: sha512-8V5XxoOF6SI12jkHkzX/6aLBMU5GEF5g387EjVSQipS0DlxWgWGSMeEayY3CRBjtTUQYwLHx9JYouWqKzy2Vng==}
     engines: {node: '>=16.9.0'}
 
   hook-std@3.0.0:
@@ -4709,7 +4709,7 @@ snapshots:
 
   highlight.js@10.7.3: {}
 
-  hono@4.6.15: {}
+  hono@4.7.2: {}
 
   hook-std@3.0.0: {}
 

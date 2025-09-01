@@ -10,16 +10,16 @@ importers:
     dependencies:
       '@langchain/cloudflare':
         specifier: ^0.1.0
-        version: 0.1.0(@langchain/core@0.3.50(openai@4.73.1(zod@3.24.3)))
+        version: 0.1.0(@langchain/core@0.3.72(openai@4.73.1(zod@3.25.76)))
       '@langchain/core':
-        specifier: ^0.3.50
-        version: 0.3.50(openai@4.73.1(zod@3.24.3))
+        specifier: ^0.3.72
+        version: 0.3.72(openai@4.73.1(zod@3.25.76))
       '@langchain/textsplitters':
         specifier: ^0.1.0
-        version: 0.1.0(@langchain/core@0.3.50(openai@4.73.1(zod@3.24.3)))
+        version: 0.1.0(@langchain/core@0.3.72(openai@4.73.1(zod@3.25.76)))
       crossbell:
         specifier: ^1.12.1
-        version: 1.12.1(typescript@5.6.2)(zod@3.24.3)
+        version: 1.12.1(typescript@5.6.2)(zod@3.25.76)
       crypto-js:
         specifier: ^4.2.0
         version: 4.2.0
@@ -37,7 +37,7 @@ importers:
         version: 2.2.6
       openai:
         specifier: ^4.73.1
-        version: 4.73.1(zod@3.24.3)
+        version: 4.73.1(zod@3.25.76)
       telegramify-markdown:
         specifier: ^1.2.2
         version: 1.2.2
@@ -809,8 +809,8 @@ packages:
     peerDependencies:
       '@langchain/core': '>=0.2.21 <0.4.0'
 
-  '@langchain/core@0.3.50':
-    resolution: {integrity: sha512-0MBVe7dZ4h3a3MJAg/YesWBvwkDg8t2rDIGg2Q11DxRBnxB7OqmvBlbZ1ftaDvoBZzxMY+8E58OsCLuay3Bk9w==}
+  '@langchain/core@0.3.72':
+    resolution: {integrity: sha512-WsGWVZYnlKffj2eEfDocPNiaTRoxyYiLSQdQ7oxZvxGZBqo/90vpjbC33UGK1uPNBM4kT+pkdaol/MnvKUh8TQ==}
     engines: {node: '>=18'}
 
   '@langchain/textsplitters@0.1.0':
@@ -1290,8 +1290,8 @@ packages:
   config-chain@1.1.13:
     resolution: {integrity: sha512-qj+f8APARXHrM0hraqXYb2/bOVSV4PvJQlNZ/DVj0QrmNM2q2euizkeuVckQ57J+W0mRH6Hvi+k50M4Jul2VRQ==}
 
-  console-table-printer@2.12.1:
-    resolution: {integrity: sha512-wKGOQRRvdnd89pCeH96e2Fn4wkbenSP6LMHfjfyNLMbGuHEFbMqQNuxXqd0oXG9caIOQ1FTvc5Uijp9/4jujnQ==}
+  console-table-printer@2.14.6:
+    resolution: {integrity: sha512-MCBl5HNVaFuuHW6FGbL/4fB7N/ormCy+tQ+sxTrF6QtSbSNETvPuOVbkJBhzDgYhvjWGrTma4eYJa37ZuoQsPw==}
 
   conventional-changelog-angular@8.0.0:
     resolution: {integrity: sha512-CLf+zr6St0wIxos4bmaKHRXWAcsCXrJU6F4VdNDrGRK3B8LDLKoX3zuMV5GhtbGkVR/LohZ6MT6im43vZLSjmA==}
@@ -2007,8 +2007,8 @@ packages:
   js-tiktoken@1.0.15:
     resolution: {integrity: sha512-65ruOWWXDEZHHbAo7EjOcNxOGasQKbL4Fq3jEr2xsCqSsoOo6VVSqzWQb6PRIqypFSDcma4jO90YP0w5X8qVXQ==}
 
-  js-tiktoken@1.0.20:
-    resolution: {integrity: sha512-Xlaqhhs8VfCd6Sh7a1cFkZHQbYTLCwVJJWiHVxBYzLPxW0XsoxBy1hitmjkdIjD3Aon5BXLHFwU5O8WUx6HH+A==}
+  js-tiktoken@1.0.21:
+    resolution: {integrity: sha512-biOj/6M5qdgx5TKjDnFT1ymSpM5tbd3ylwDtrQvFQSu0Z7bBYko2dF+W/aUkXUPuk6IVpRxk/3Q2sHOzGlS36g==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -2042,11 +2042,20 @@ packages:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
 
-  langsmith@0.3.23:
-    resolution: {integrity: sha512-6gfotO1YS3vqznSJutdFmJXL2Vxy27/RV2JA7YTsfWoJtxlmBR/1QE7kMIyEvuoEE5KGFHyZMuAh/fVeiRffLA==}
+  langsmith@0.3.66:
+    resolution: {integrity: sha512-d50FJ25HPAT2e/6u7oPAYFYH7uvVhxf7vThAOE5tP6YFIUHwLMBmJj8R4Z7APp5jF4/m8upvbK4J4jP5UIN+Eg==}
     peerDependencies:
+      '@opentelemetry/api': '*'
+      '@opentelemetry/exporter-trace-otlp-proto': '*'
+      '@opentelemetry/sdk-trace-base': '*'
       openai: '*'
     peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      '@opentelemetry/exporter-trace-otlp-proto':
+        optional: true
+      '@opentelemetry/sdk-trace-base':
+        optional: true
       openai:
         optional: true
 
@@ -2773,6 +2782,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.7.2:
+    resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
     engines: {node: '>=8'}
@@ -2792,8 +2806,8 @@ packages:
     resolution: {integrity: sha512-iuh+gPf28RkltuJC7W5MRi6XAjTDCAPC/prJUpQoG4vIP3MJZ+GTydVnodXA7pwvTKb2cA0m9OFZW/cdWy/I/w==}
     engines: {node: '>=6'}
 
-  simple-wcswidth@1.0.1:
-    resolution: {integrity: sha512-xMO/8eNREtaROt7tJvWJqHBDTMFN4eiQ5I4JRMuilwfnFcV5W9u7RUkueNkdw0jPqGMX36iCywelS5yilTuOxg==}
+  simple-wcswidth@1.1.2:
+    resolution: {integrity: sha512-j7piyCjAeTDSjzTSQ7DokZtMNwNlEAyxqSZeCS+CXH7fJ4jx3FuJ/mTW3mE+6JLs4VJBbcll0Kjn+KXI5t21Iw==}
 
   skin-tone@2.0.0:
     resolution: {integrity: sha512-kUMbT1oBJCpgrnKoSr0o6wPtvRWT9W9UKvGLwfJYO2WuahZRHOpEyL1ckyMGgMWh0UdpmaoFqKKD29WTomNEGA==}
@@ -3184,13 +3198,13 @@ packages:
   youch@3.3.4:
     resolution: {integrity: sha512-UeVBXie8cA35DS6+nBkls68xaBBXCye0CNznrhszZjTbRVnJKQuNsyLKBTTL4ln1o1rh2PKtv35twV7irj5SEg==}
 
-  zod-to-json-schema@3.24.5:
-    resolution: {integrity: sha512-/AuWwMP+YqiPbsJx5D6TfgRTc4kTLjsh5SOcd4bLsfUg2RcEXrFMJl1DGgdHy2aCfsIA/cr/1JM0xcB2GZji8g==}
+  zod-to-json-schema@3.24.6:
+    resolution: {integrity: sha512-h/z3PKvcTcTetyjl1fkj79MHNEjm+HpD6NXheWjzOekY7kV+lwDYnHw+ivHkijnCSMz1yJaWBD9vu/Fcmk+vEg==}
     peerDependencies:
       zod: ^3.24.1
 
-  zod@3.24.3:
-    resolution: {integrity: sha512-HhY1oqzWCQWuUqvBFnsyrtZRhyPeR7SUGv+C4+MsisMuVfSPx8HpwWqH8tRahSlt6M3PiFAcoeFhZAqIXTxoSg==}
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
   zwitch@1.0.5:
     resolution: {integrity: sha512-V50KMwwzqJV0NpZIZFwfOD5/lyny3WlSzRiXgA0G7VUnRlqttta1L6UQIHzd6EuBY/cHGfwTIck7w1yH6Q5zUw==}
@@ -3608,31 +3622,34 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
 
-  '@langchain/cloudflare@0.1.0(@langchain/core@0.3.50(openai@4.73.1(zod@3.24.3)))':
+  '@langchain/cloudflare@0.1.0(@langchain/core@0.3.72(openai@4.73.1(zod@3.25.76)))':
     dependencies:
-      '@langchain/core': 0.3.50(openai@4.73.1(zod@3.24.3))
+      '@langchain/core': 0.3.72(openai@4.73.1(zod@3.25.76))
       uuid: 10.0.0
 
-  '@langchain/core@0.3.50(openai@4.73.1(zod@3.24.3))':
+  '@langchain/core@0.3.72(openai@4.73.1(zod@3.25.76))':
     dependencies:
       '@cfworker/json-schema': 4.1.1
       ansi-styles: 5.2.0
       camelcase: 6.3.0
       decamelize: 1.2.0
-      js-tiktoken: 1.0.20
-      langsmith: 0.3.23(openai@4.73.1(zod@3.24.3))
+      js-tiktoken: 1.0.21
+      langsmith: 0.3.66(openai@4.73.1(zod@3.25.76))
       mustache: 4.2.0
       p-queue: 6.6.2
       p-retry: 4.6.2
       uuid: 10.0.0
-      zod: 3.24.3
-      zod-to-json-schema: 3.24.5(zod@3.24.3)
+      zod: 3.25.76
+      zod-to-json-schema: 3.24.6(zod@3.25.76)
     transitivePeerDependencies:
+      - '@opentelemetry/api'
+      - '@opentelemetry/exporter-trace-otlp-proto'
+      - '@opentelemetry/sdk-trace-base'
       - openai
 
-  '@langchain/textsplitters@0.1.0(@langchain/core@0.3.50(openai@4.73.1(zod@3.24.3)))':
+  '@langchain/textsplitters@0.1.0(@langchain/core@0.3.72(openai@4.73.1(zod@3.25.76)))':
     dependencies:
-      '@langchain/core': 0.3.50(openai@4.73.1(zod@3.24.3))
+      '@langchain/core': 0.3.72(openai@4.73.1(zod@3.25.76))
       js-tiktoken: 1.0.15
 
   '@noble/curves@1.7.0':
@@ -3937,7 +3954,7 @@ snapshots:
       fast-glob: 3.3.3
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.7.1
+      semver: 7.7.2
       ts-api-utils: 1.3.0(typescript@5.6.2)
     optionalDependencies:
       typescript: 5.6.2
@@ -3960,10 +3977,10 @@ snapshots:
       '@typescript-eslint/types': 8.8.0
       eslint-visitor-keys: 3.4.3
 
-  abitype@1.0.7(typescript@5.6.2)(zod@3.24.3):
+  abitype@1.0.7(typescript@5.6.2)(zod@3.25.76):
     optionalDependencies:
       typescript: 5.6.2
-      zod: 3.24.3
+      zod: 3.25.76
 
   abort-controller@3.0.0:
     dependencies:
@@ -4169,9 +4186,9 @@ snapshots:
       ini: 1.3.8
       proto-list: 1.2.4
 
-  console-table-printer@2.12.1:
+  console-table-printer@2.14.6:
     dependencies:
-      simple-wcswidth: 1.0.1
+      simple-wcswidth: 1.1.2
 
   conventional-changelog-angular@8.0.0:
     dependencies:
@@ -4211,7 +4228,7 @@ snapshots:
       shebang-command: 2.0.0
       which: 2.0.2
 
-  crossbell@1.12.1(typescript@5.6.2)(zod@3.24.3):
+  crossbell@1.12.1(typescript@5.6.2)(zod@3.25.76):
     dependencies:
       '@crossbell/ipfs-fetch': 0.0.21
       async-cache-dedupe: 2.2.0
@@ -4219,7 +4236,7 @@ snapshots:
       eip1193-types: 0.2.1
       exponential-backoff: 3.1.1
       p-limit: 3.1.0
-      viem: 2.22.1(typescript@5.6.2)(zod@3.24.3)
+      viem: 2.22.1(typescript@5.6.2)(zod@3.25.76)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -4877,7 +4894,7 @@ snapshots:
     dependencies:
       base64-js: 1.5.1
 
-  js-tiktoken@1.0.20:
+  js-tiktoken@1.0.21:
     dependencies:
       base64-js: 1.5.1
 
@@ -4909,17 +4926,17 @@ snapshots:
 
   kleur@4.1.5: {}
 
-  langsmith@0.3.23(openai@4.73.1(zod@3.24.3)):
+  langsmith@0.3.66(openai@4.73.1(zod@3.25.76)):
     dependencies:
       '@types/uuid': 10.0.0
       chalk: 4.1.2
-      console-table-printer: 2.12.1
+      console-table-printer: 2.14.6
       p-queue: 6.6.2
       p-retry: 4.6.2
-      semver: 7.7.1
+      semver: 7.7.2
       uuid: 10.0.0
     optionalDependencies:
-      openai: 4.73.1(zod@3.24.3)
+      openai: 4.73.1(zod@3.25.76)
 
   levn@0.4.1:
     dependencies:
@@ -5314,7 +5331,7 @@ snapshots:
       workerd: 1.20241230.0
       ws: 8.18.0
       youch: 3.3.4
-      zod: 3.24.3
+      zod: 3.25.76
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -5383,7 +5400,7 @@ snapshots:
   normalize-package-data@6.0.2:
     dependencies:
       hosted-git-info: 7.0.2
-      semver: 7.7.1
+      semver: 7.7.2
       validate-npm-package-license: 3.0.4
 
   normalize-url@8.0.1: {}
@@ -5414,7 +5431,7 @@ snapshots:
     dependencies:
       mimic-fn: 4.0.0
 
-  openai@4.73.1(zod@3.24.3):
+  openai@4.73.1(zod@3.25.76):
     dependencies:
       '@types/node': 18.19.3
       '@types/node-fetch': 2.6.9
@@ -5424,7 +5441,7 @@ snapshots:
       formdata-node: 4.4.1
       node-fetch: 2.7.0
     optionalDependencies:
-      zod: 3.24.3
+      zod: 3.25.76
     transitivePeerDependencies:
       - encoding
 
@@ -5437,14 +5454,14 @@ snapshots:
       type-check: 0.4.0
       word-wrap: 1.2.5
 
-  ox@0.6.0(typescript@5.6.2)(zod@3.24.3):
+  ox@0.6.0(typescript@5.6.2)(zod@3.25.76):
     dependencies:
       '@adraffy/ens-normalize': 1.11.0
       '@noble/curves': 1.7.0
       '@noble/hashes': 1.6.1
       '@scure/bip32': 1.6.0
       '@scure/bip39': 1.5.0
-      abitype: 1.0.7(typescript@5.6.2)(zod@3.24.3)
+      abitype: 1.0.7(typescript@5.6.2)(zod@3.25.76)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 5.6.2
@@ -5733,6 +5750,8 @@ snapshots:
 
   semver@7.7.1: {}
 
+  semver@7.7.2: {}
+
   shebang-command@2.0.0:
     dependencies:
       shebang-regex: 3.0.0
@@ -5749,7 +5768,7 @@ snapshots:
       figures: 2.0.0
       pkg-conf: 2.1.0
 
-  simple-wcswidth@1.0.1: {}
+  simple-wcswidth@1.1.2: {}
 
   skin-tone@2.0.0:
     dependencies:
@@ -6049,15 +6068,15 @@ snapshots:
       unist-util-stringify-position: 2.0.3
       vfile-message: 2.0.4
 
-  viem@2.22.1(typescript@5.6.2)(zod@3.24.3):
+  viem@2.22.1(typescript@5.6.2)(zod@3.25.76):
     dependencies:
       '@noble/curves': 1.7.0
       '@noble/hashes': 1.6.1
       '@scure/bip32': 1.6.0
       '@scure/bip39': 1.5.0
-      abitype: 1.0.7(typescript@5.6.2)(zod@3.24.3)
+      abitype: 1.0.7(typescript@5.6.2)(zod@3.25.76)
       isows: 1.0.6(ws@8.18.0)
-      ox: 0.6.0(typescript@5.6.2)(zod@3.24.3)
+      ox: 0.6.0(typescript@5.6.2)(zod@3.25.76)
       webauthn-p256: 0.0.10
       ws: 8.18.0
     optionalDependencies:
@@ -6164,11 +6183,11 @@ snapshots:
       mustache: 4.2.0
       stacktracey: 2.1.8
 
-  zod-to-json-schema@3.24.5(zod@3.24.3):
+  zod-to-json-schema@3.24.6(zod@3.25.76):
     dependencies:
-      zod: 3.24.3
+      zod: 3.25.76
 
-  zod@3.24.3: {}
+  zod@3.25.76: {}
 
   zwitch@1.0.5: {}
 

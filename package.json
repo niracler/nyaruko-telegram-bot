@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20241230.0",
-    "@eslint/js": "^9.16.0",
+    "@eslint/js": "^9.34.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/github": "^11.0.1",
@@ -29,7 +29,7 @@
     "semantic-release": "^24.2.0",
     "tsx": "^4.19.2",
     "typescript": "^5.6.2",
-    "typescript-eslint": "^8.8.0",
+    "typescript-eslint": "^8.41.0",
     "wrangler": "^3.105.0"
   },
   "dependencies": {

@@ -40,7 +40,7 @@
     "crypto-js": "^4.2.0",
     "drizzle-orm": "^0.33.0",
     "grammy": "^1.34.1",
-    "hono": "^4.10.2",
+    "hono": "^4.10.4",
     "oauth-1.0a": "^2.2.6",
     "openai": "^4.73.1",
     "telegramify-markdown": "^1.2.2"
